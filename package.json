@@ -1,0 +1,20 @@
+{
+  "name": "netpocketos",
+  "version": "0.0.0",
+  "description": "A thin layer that sits atop Raspbian. It turns your raspberry pi into a Netpocket device :)",
+  "main": "client.js",
+  "scripts": {
+    "start": "node client.js",
+    "test": "mocha test/**/*.js"
+  },
+  "keywords": [
+    "netpocket"
+  ],
+  "author": "Keyvan Fatehi",
+  "license": "BSD-2-Clause",
+  "dependencies": {
+    "primus": "~2.0.2",
+    "request": "~2.33.0",
+    "sockjs": "~0.3.8"
+  }
+}
