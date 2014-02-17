@@ -23,8 +23,7 @@ require('getmac').getMac(function(err, res){
 });
 
 var buildSocket = function(primusSpec) {
-  var server = http.createServer()
-    , Socket = Primus.createSocket(primusSpec)
+  var Socket = Primus.createSocket(primusSpec)
     , socket = new Socket(config.relayServer);
 
   App(socket, config);
