@@ -7,12 +7,18 @@ var config = {
 var Primus = require('primus')
   , http = require('http');
 
+var macAddress;
+
+require('getmac').getMac(function(err, res){
+  if (err) throw err;
+  macAddress = res;
+});
+
 var buildSocket = function(primusSpec) {
   var server = http.createServer()
     , primus = new Primus(server, primusSpec)
     , Socket = primus.Socket
     , socket = new Socket(config.relayServer);
-
 
   socket.on('open', function () {
     console.log("Connected to relay");
@@ -26,7 +32,9 @@ var buildSocket = function(primusSpec) {
   socket.on('ping', function() {
     console.log("ping");
     socket.write({
-      args: ["pong"]
+      args: ["pong", {
+        macAddress: macAddress
+      }]
     });
   });
 
@@ -37,20 +45,36 @@ var buildSocket = function(primusSpec) {
   socket.on('reconnect', function() {
     console.log("about to reconnect");
   });
-}
+};
 
-var eventuallyConnect = function() {
+var timer = null;
+
+var eventuallyConnect = function(domain) {
+  if (timer !== null) { clearTimeout(timer); }
   http.get(config.relayServer+'/primus/spec', function(res) {
     res.on('data', function(data) {
-      buildSocket(JSON.parse(data.toString()));
+      domain.run(function() {
+        buildSocket(JSON.parse(data.toString()));
+      });
     });
   }).on('error', function(e) {
-    setTimeout(eventuallyConnect, 1000);
+    console.log("Error connecting.. will retry");
+    timer = setTimeout(protectedConnection, 1000);
   });
-}
+};
 
-process.on('uncaughtException', function (exception) {
-  eventuallyConnect();
-});
+var domain = require('domain');
 
-eventuallyConnect();
+var protectedConnection = function() {
+  if (timer !== null) { clearTimeout(timer); }
+  console.log("Attempting a protected connection");
+  // We will buildSocket in the context of a domain
+  var d = domain.create();
+  d.on('error', function(err) {
+    console.log("caught an error in the domain, will retry");
+    protectedConnection();
+  });
+  eventuallyConnect(d);
+};
+
+protectedConnection();

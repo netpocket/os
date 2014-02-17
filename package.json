@@ -15,6 +15,7 @@
   "dependencies": {
     "primus": "~2.0.2",
     "request": "~2.33.0",
-    "sockjs": "~0.3.8"
+    "sockjs": "~0.3.8",
+    "getmac": "~1.0.6"
   }
 }
