@@ -15,17 +15,19 @@ var config = {
 
 var Primus = require('primus')
   , http = require('http')
-  , macAddress = null;
+  , App = require('./src/app.js');
 
 require('getmac').getMac(function(err, res){
   if (err) throw err;
-  macAddress = res;
+  config.token = res;
 });
 
 var buildSocket = function(primusSpec) {
   var server = http.createServer()
     , Socket = Primus.createSocket(primusSpec)
     , socket = new Socket(config.relayServer);
+
+  App(socket, config);
 
   socket.on('open', function () {
     console.log("Connected to relay");
@@ -36,13 +38,6 @@ var buildSocket = function(primusSpec) {
     socket.emit.apply(socket, data.args);
   });
 
-  socket.on('please identify', function() {
-    socket.write({
-      args: ["my identity", {
-        macAddress: macAddress
-      }]
-    });
-  });
 
   socket.on('reconnecting', function() {
     console.log('scheduling a reconnect.');
@@ -77,8 +72,8 @@ var protectedConnection = function() {
   // We will buildSocket in the context of a domain
   var d = domain.create();
   d.on('error', function(err) {
-    console.log("caught an error in the domain, will retry");
-    protectedConnection();
+    console.log("domain error", err);
+    timer = setTimeout(protectedConnection, 1000);
   });
   eventuallyConnect(d);
 };
