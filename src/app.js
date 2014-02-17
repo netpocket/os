@@ -7,8 +7,6 @@ module.exports = function(socket, config) {
 
 
   socket.on('please identify', function() {
-  socket.write({argss:1})
-
 
     socket.write({
       args: ["i am a netpocketos device", config.token, {
