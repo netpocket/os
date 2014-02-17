@@ -1,13 +1,21 @@
 'use strict';
+try {
+  var memwatch = require('memwatch');
+  memwatch.on('leak', function(info) {
+    console.log("leak", info);
+  });
+  console.log("Watching for memory leaks");
+} catch (e) {
+  console.log("Not watching for memory leaks -- npm install memwatch to do so");
+}
 
 var config = {
   relayServer: "http://luchia.local:1337"
 };
 
 var Primus = require('primus')
-  , http = require('http');
-
-var macAddress;
+  , http = require('http')
+  , macAddress = null;
 
 require('getmac').getMac(function(err, res){
   if (err) throw err;
@@ -16,8 +24,7 @@ require('getmac').getMac(function(err, res){
 
 var buildSocket = function(primusSpec) {
   var server = http.createServer()
-    , primus = new Primus(server, primusSpec)
-    , Socket = primus.Socket
+    , Socket = Primus.createSocket(primusSpec)
     , socket = new Socket(config.relayServer);
 
   socket.on('open', function () {
@@ -29,10 +36,9 @@ var buildSocket = function(primusSpec) {
     socket.emit.apply(socket, data.args);
   });
 
-  socket.on('ping', function() {
-    console.log("ping");
+  socket.on('please identify', function() {
     socket.write({
-      args: ["pong", {
+      args: ["my identity", {
         macAddress: macAddress
       }]
     });
