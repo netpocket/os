@@ -1,20 +1,36 @@
 var _ = require('underscore')._,
 Backbone = require('backbone'),
 Connection = require('../connection.js'),
+connection = null,
 Device = Backbone.Model.extend({
   defaults: {
     name: "unnamed",
-    services: [
-      {
-        name: 'some service',
-        actions: [
-          {
-            label:'some action',
-            message: 'socket msg'
+    features: {
+      os: {
+        'get uptime': {
+          fn: function() {
+            fcb('os:get uptime', null, require('os').uptime());
           }
-        ]
+        }
+      },
+      packages: {
+        'list': {
+          fn: function() {
+            /* list installed apt packages */
+          }
+        },
+        'install': {
+          fn: function() {
+            /* install apt packages */
+          }
+        },
+        'uninstall': {
+          fn: function() {
+            /* uninstall apt packages */
+          }
+        }
       }
-    ]
+    }
   },
 
   initialize: function() {
@@ -24,8 +40,13 @@ Device = Backbone.Model.extend({
   },
 
   connect: function(socket, config) {
-    this.connection = new Connection(socket, config, this);
+    this.connection = connection = new Connection(socket, config, this);
   }
 });
+
+/* Feature callback pattern */
+var fcb = function(name, err, result) {
+  connection.emit('feature callback', name, err, result);
+};
 
 module.exports = Device;
