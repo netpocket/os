@@ -1,9 +1,8 @@
-var Connection = require('./connection.js');
-
 var Worker = (function(config) {
   "use strict";
 
-  var Primus = require('primus'),
+  var Device = require('./models/device.js'),
+      Primus = require('primus'),
       http = require('http'),
       domain = require('domain'),
       d = domain.create();
@@ -35,7 +34,8 @@ var Worker = (function(config) {
             console.log("about to reconnect");
           });
 
-          var connection = new Connection(socket, config);
+          var device = new Device();
+          device.connect(socket, config);
         });
       });
     });

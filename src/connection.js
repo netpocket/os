@@ -1,4 +1,4 @@
-var Connection = (function(socket, config) {
+var Connection = (function(socket, config, device) {
   "use strict";
   var self = this;
   this.socket = socket;
@@ -13,7 +13,7 @@ var Connection = (function(socket, config) {
   });
 
   socket.on('please identify', function() {
-    emit("i am a netpocketos device", config.token, config.data);
+    emit("i am a netpocketos device", config.token, device);
   });
 
 });

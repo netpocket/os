@@ -1,9 +1,13 @@
+var token = process.env.NOS_TOKEN;
+
+if (!token) { throw new Error("missing environment variable NOS_TOKEN"); }
+
 (function() {
   "use strict";
 
   var config = {
     relayServer: "http://luchia.local:1337",
-    token: "mytoken"
+    token: token
   };
 
   var cluster = require('cluster');
