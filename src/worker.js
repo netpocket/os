@@ -37,7 +37,7 @@ var Worker = (function(config) {
 
           var connection = new Connection(socket, config);
         });
-      })
+      });
     });
   };
 });
