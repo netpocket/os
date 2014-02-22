@@ -4,8 +4,8 @@
   "description": "A thin layer that sits atop Raspbian. It turns your raspberry pi into a Netpocket device :)",
   "main": "client.js",
   "scripts": {
-    "start": "node client.js",
-    "test": "mocha test/**/*.js"
+    "start": "node server.js",
+    "test": "grunt simplemocha"
   },
   "keywords": [
     "netpocket"
@@ -16,7 +16,9 @@
     "primus": "~2.0.2",
     "sockjs": "~0.3.8",
     "sockjs-client-node": "0.0.0",
-    "getmac": "~1.0.6"
+    "getmac": "~1.0.6",
+    "underscore": "~1.6.0",
+    "backbone": "~1.1.2"
   },
   "devDependencies": {
     "sinon-chai": "~2.5.0",

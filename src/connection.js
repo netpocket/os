@@ -1,9 +1,10 @@
-"use strict";
+var Connection = (function(socket, config) {
+  "use strict";
+  var self = this;
+  this.socket = socket;
 
-module.exports = function(socket, config) {
-  var emit = function() {
+  var emit = this.emit = function() {
     var args = Array.prototype.slice.call(arguments, 0);
-    console.log("emitting", args);
     socket.write({args:args});
   };
 
@@ -15,4 +16,8 @@ module.exports = function(socket, config) {
     console.log("relay is asking for identification");
     emit("i am a netpocketos device", config.token, {});
   });
-};
+
+});
+
+module.exports = Connection;
+
