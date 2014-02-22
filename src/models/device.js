@@ -13,7 +13,7 @@ Device = Backbone.Model.extend({
           }
         }
       },
-      packages: {
+      pkg: {
         'list': {
           fn: function() {
             /* list installed apt packages */
