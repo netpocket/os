@@ -13,8 +13,7 @@ var Connection = (function(socket, config) {
   });
 
   socket.on('please identify', function() {
-    console.log("relay is asking for identification");
-    emit("i am a netpocketos device", config.token, {});
+    emit("i am a netpocketos device", config.token, config.data);
   });
 
 });
