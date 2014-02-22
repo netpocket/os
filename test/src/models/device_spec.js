@@ -35,7 +35,7 @@ describe("Device", function() {
       it("can get uptime", function() {
         sinon.stub(os, 'uptime').returns('12345');
         features.os['get uptime'].fn();
-        expect(socket).to.write('feature callback', 'os:get uptime', null, "12345");
+        expect(socket).to.write('feature:response:os:get uptime', null, "12345");
         os.uptime.restore();
       });
     });

@@ -46,7 +46,7 @@ Device = Backbone.Model.extend({
 
 /* Feature callback pattern */
 var fcb = function(name, err, result) {
-  connection.emit('feature callback', name, err, result);
+  connection.emit('feature:response:'+name, err, result);
 };
 
 module.exports = Device;
