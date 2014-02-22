@@ -17,5 +17,16 @@
     "sockjs": "~0.3.8",
     "sockjs-client-node": "0.0.0",
     "getmac": "~1.0.6"
+  },
+  "devDependencies": {
+    "sinon-chai": "~2.5.0",
+    "grunt-simple-mocha": "~0.4.0",
+    "chai": "~1.9.0",
+    "sinon": "~1.8.2",
+    "mocha": "~1.17.1",
+    "grunt-contrib-watch": "~0.5.3",
+    "grunt": "~0.4.2",
+    "istanbul": "~0.2.4",
+    "grunt-contrib-jshint": "~0.8.0"
   }
 }
