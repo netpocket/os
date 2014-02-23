@@ -5,6 +5,9 @@ var Connection = (function(socket, config, device) {
 
   var emit = this.emit = function() {
     var args = Array.prototype.slice.call(arguments, 0);
+    if (process.env.NODE_ENV === "development") {
+      console.log('emitting', args);
+    }
     socket.write({args:args});
   };
 

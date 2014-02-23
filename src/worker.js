@@ -23,6 +23,9 @@ var Worker = (function(config) {
 
           socket.on('data', function (data) {
             if (socket.reserved(data.args[0])) return;
+            if (process.env.NODE_ENV === "development") {
+              console.log('receiving', data.args);
+            }
             socket.emit.apply(socket, data.args);
           });
 
