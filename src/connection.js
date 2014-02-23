@@ -16,6 +16,14 @@ var Connection = (function(socket, config, device) {
     emit("i am a netpocketos device", config.token, device);
   });
 
+  socket.on('relay', function(recipient_identifier, payload) {
+    emit(recipient_identifier, {
+      error: 422,
+      reason: "unprocessable entity",
+      detail: "your payload was semantically erroneous"
+    });
+  });
+
 });
 
 module.exports = Connection;

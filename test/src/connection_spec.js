@@ -46,4 +46,31 @@ describe("Connection", function() {
       expect(socket).to.write('i am a netpocketos device', 'token', device);
     });
   });
+
+  describe("browser<->device communication by relay", function() {
+    beforeEach(function() {
+      call = socket.on.getCall(2);
+    });
+    /*
+     * relay sends us:
+     * 'relay', 'browser:Ba', payload
+     * we must look in the payload, honor it
+     * and send back to the recipient
+     */
+    it("listens for relay messages", function() {
+      expect(call.args[0]).to.eq('relay');
+    });
+
+    it("processes payload and returns one back with the recipient identifier intact", function() {
+      call.args[1]('recipient:identifier', {
+        my: "payload",
+        real: "special"
+      });
+      expect(socket).to.write('recipient:identifier', {
+        error: 422,
+        reason: "unprocessable entity",
+        detail: "your payload was semantically erroneous"
+      });
+    });
+  });
 });
