@@ -18,9 +18,9 @@ var Connection = (function(socket, config, device) {
 
   socket.on('relay', function(recipient_identifier, payload) {
     emit(recipient_identifier, {
-      error: 422,
-      reason: "unprocessable entity",
-      detail: "your payload was semantically erroneous"
+      error: 400,
+      reason: "Bad Request",
+      detail: "It's not clear what you want me to do. Giving up."
     });
   });
 

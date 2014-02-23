@@ -67,9 +67,9 @@ describe("Connection", function() {
         real: "special"
       });
       expect(socket).to.write('recipient:identifier', {
-        error: 422,
-        reason: "unprocessable entity",
-        detail: "your payload was semantically erroneous"
+        error: 400,
+        reason: "Bad Request",
+        detail: "It's not clear what you want me to do. Giving up."
       });
     });
   });
