@@ -30,13 +30,20 @@ describe("Device", function() {
     });
 
     describe("os", function() {
-      var os = require('os');
+      var os = require('os'),
+          spy = sinon.spy();
+
+      beforeEach(function() {
+        sinon.stub(os, 'uptime').returns('12345');
+      });
+
+      afterEach(function() {
+        os.uptime.restore();
+      });
 
       it("can get uptime", function() {
-        sinon.stub(os, 'uptime').returns('12345');
-        features.os['get uptime'].fn();
-        expect(socket).to.write('feature:response:os:get uptime', null, "12345");
-        os.uptime.restore();
+        features.os['get uptime'].fn(spy);
+        expect(spy).to.have.been.calledWith(null, '12345');
       });
     });
 

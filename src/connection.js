@@ -17,10 +17,8 @@ var Connection = (function(socket, config, device) {
   });
 
   socket.on('relay', function(recipient_identifier, payload) {
-    emit(recipient_identifier, {
-      error: 400,
-      reason: "Bad Request",
-      detail: "It's not clear what you want me to do. Giving up."
+    device.inboundPayload(payload, function(err, res) {
+      emit(recipient_identifier, (err === null ? res : err));
     });
   });
 

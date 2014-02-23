@@ -8,8 +8,8 @@ Device = Backbone.Model.extend({
     features: {
       os: {
         'get uptime': {
-          fn: function() {
-            fcb('os:get uptime', null, require('os').uptime());
+          fn: function(cb) {
+            cb(null, require('os').uptime());
           }
         }
       },
@@ -41,12 +41,31 @@ Device = Backbone.Model.extend({
 
   connect: function(socket, config) {
     this.connection = connection = new Connection(socket, config, this);
+  },
+
+  /* Relay brings device a payload from browsers and/or other
+   * devices through this method. Respond in (err, res)
+   * style using the callback provided.
+   * Note: in this method treat `err` like a HTTP status code
+   * This is funnelled back to the originator of the payload */
+  inboundPayload: function(payload, cb) {
+    if (payload.cmd === "feature request") {
+      var feature = this.attributes.features[payload.args[0]];
+      var task = feature[payload.args[1]];
+      task.fn(function(err, res) {
+        cb(null, {
+          cmd: "feature response",
+          args: [ err, res ]
+        });
+      });
+    } else {
+      cb({
+        error: 400,
+        reason: "Bad Request",
+        detail: "It's not clear what you want me to do. Giving up."
+      }, null);
+    }
   }
 });
-
-/* Feature callback pattern */
-var fcb = function(name, err, result) {
-  connection.emit('feature:response:'+name, err, result);
-};
 
 module.exports = Device;

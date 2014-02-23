@@ -61,15 +61,41 @@ describe("Connection", function() {
       expect(call.args[0]).to.eq('relay');
     });
 
-    it("processes payload and returns one back with the recipient identifier intact", function() {
-      call.args[1]('recipient:identifier', {
-        my: "payload",
-        real: "special"
+    describe("invalid request", function() {
+      it("processes payload and returns one back with the recipient identifier intact", function() {
+        call.args[1]('recipient:identifier', {
+          my: "payload",
+          real: "special"
+        });
+        expect(socket).to.write('recipient:identifier', {
+          error: 400,
+          reason: "Bad Request",
+          detail: "It's not clear what you want me to do. Giving up."
+        });
       });
-      expect(socket).to.write('recipient:identifier', {
-        error: 400,
-        reason: "Bad Request",
-        detail: "It's not clear what you want me to do. Giving up."
+    });
+
+    describe("requesting a default feature (os:get uptime)", function() {
+      var os = require('os');
+
+      beforeEach(function() {
+        sinon.stub(os, 'uptime').returns('12345');
+      });
+
+      afterEach(function() {
+        os.uptime.restore();
+      });
+
+      it("processes the payload and responds", function() {
+        call.args[1]('recipient:identifier', {
+          listen: "once",
+          cmd: "feature request",
+          args: [ "os", "get uptime" ]
+        });
+        expect(socket).to.write('recipient:identifier', {
+          cmd: "feature response",
+          args: [ null, '12345' ]
+        });
       });
     });
   });
