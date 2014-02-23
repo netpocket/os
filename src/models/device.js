@@ -15,18 +15,21 @@ Device = Backbone.Model.extend({
       },
       pkg: {
         'list': {
-          fn: function() {
+          fn: function(cb) {
             /* list installed apt packages */
+            cb("not yet implemented", null);
           }
         },
         'install': {
-          fn: function() {
+          fn: function(cb) {
             /* install apt packages */
+            cb("not yet implemented", null);
           }
         },
         'uninstall': {
-          fn: function() {
+          fn: function(cb) {
             /* uninstall apt packages */
+            cb("not yet implemented", null);
           }
         }
       }
@@ -49,16 +52,18 @@ Device = Backbone.Model.extend({
    * Note: in this method treat `err` like a HTTP status code
    * This is funnelled back to the originator of the payload */
   inboundPayload: function(payload, cb) {
-    if (payload.cmd === "feature request") {
+    try {
       var feature = this.attributes.features[payload.args[0]];
       var task = feature[payload.args[1]];
       task.fn(function(err, res) {
         cb(null, {
           cmd: "feature response",
-          args: [ err, res ]
+          args: payload.args,
+          err: err,
+          res: res
         });
       });
-    } else {
+    } catch (e) {
       cb({
         error: 400,
         reason: "Bad Request",

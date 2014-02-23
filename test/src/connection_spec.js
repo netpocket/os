@@ -51,26 +51,79 @@ describe("Connection", function() {
     beforeEach(function() {
       call = socket.on.getCall(2);
     });
-    /*
-     * relay sends us:
-     * 'relay', 'browser:Ba', payload
-     * we must look in the payload, honor it
-     * and send back to the recipient
-     */
+
     it("listens for relay messages", function() {
       expect(call.args[0]).to.eq('relay');
     });
 
     describe("invalid request", function() {
-      it("processes payload and returns one back with the recipient identifier intact", function() {
-        call.args[1]('recipient:identifier', {
-          my: "payload",
-          real: "special"
+      describe("cmd is missing", function() {
+        it("sends back an error message", function() {
+          call.args[1]('recipient:identifier', {
+            my: "payload",
+            real: "special"
+          });
+          expect(socket).to.write('recipient:identifier', {
+            error: 400,
+            reason: "Bad Request",
+            detail: "It's not clear what you want me to do. Giving up."
+          });
         });
-        expect(socket).to.write('recipient:identifier', {
-          error: 400,
-          reason: "Bad Request",
-          detail: "It's not clear what you want me to do. Giving up."
+      });
+
+      describe("cmd is does not resolve to an object", function() {
+        it("sends back an error message", function() {
+          call.args[1]('recipient:identifier', {
+            cmd: "wont resolve"
+          });
+          expect(socket).to.write('recipient:identifier', {
+            error: 400,
+            reason: "Bad Request",
+            detail: "It's not clear what you want me to do. Giving up."
+          });
+        });
+      });
+
+      describe("cmd is valid but", function() {
+        describe("args are missing", function() {
+          it("sends back an error message", function() {
+            call.args[1]('recipient:identifier', {
+              cmd: 'feature request'
+            });
+            expect(socket).to.write('recipient:identifier', {
+              error: 400,
+              reason: "Bad Request",
+              detail: "It's not clear what you want me to do. Giving up."
+            });
+          });
+        });
+        
+        describe("args is not an array", function() {
+          it("sends back an error message", function() {
+            call.args[1]('recipient:identifier', {
+              cmd: 'feature request',
+              args: 'not an array'
+            });
+            expect(socket).to.write('recipient:identifier', {
+              error: 400,
+              reason: "Bad Request",
+              detail: "It's not clear what you want me to do. Giving up."
+            });
+          });
+        });
+        
+        describe("args do not resolve to a function", function() {
+          it("sends back an error message", function() {
+            call.args[1]('recipient:identifier', {
+              cmd: 'feature request',
+              args: ['does', 'not', 'resolve']
+            });
+            expect(socket).to.write('recipient:identifier', {
+              error: 400,
+              reason: "Bad Request",
+              detail: "It's not clear what you want me to do. Giving up."
+            });
+          });
         });
       });
     });
@@ -94,7 +147,9 @@ describe("Connection", function() {
         });
         expect(socket).to.write('recipient:identifier', {
           cmd: "feature response",
-          args: [ null, '12345' ]
+          args: [ "os", "get uptime" ],
+          err: null,
+          res: '12345'
         });
       });
     });
