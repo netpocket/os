@@ -7,12 +7,17 @@ _ = require('underscore');
 chai.Assertion.addMethod('write', function(){
   var obj = this._obj;
   var args = Array.prototype.slice.call(arguments, 0);
+  var call = obj.write.getCall(obj.write.callCount-1);
+  var isEqual = function() {
+    if (call === null) return false;
+    return _.isEqual(call.args[0].args, args);
+  };
   this.assert(
-    _.isEqual(obj.write.getCall(obj.write.callCount-1).args[0].args, args),
+    isEqual(),
     "expected to write #{exp}, but wrote #{act}",
     "expected not to write #{act}",
     args,
-    obj.write.getCall(0).args[0].args,
+    (call === null ? '' : call.args[0].args),
     true
   );
 });
