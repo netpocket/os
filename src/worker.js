@@ -3,7 +3,7 @@ var Worker = (function(config) {
 
   var Device = require('./models/device.js'),
       Primus = require('primus'),
-      scheme = (config.secure ? 'https' : 'http'),
+      http = require('http'),
       domain = require('domain'),
       d = domain.create();
 
@@ -11,13 +11,11 @@ var Worker = (function(config) {
 
   this.connect = function() {
     d.run(function() {
-      require(scheme).get(scheme+'://'+config.relayServer+'/primus/spec', function(res) {
+      http.get(config.relayServer+'/primus/spec', function(res) {
         res.on('data', function(data) {
-          var primusSpec = JSON.parse(data.toString());
-            console.log(primusSpec);
-          var
+          var primusSpec = JSON.parse(data.toString()),
               Socket = Primus.createSocket(primusSpec),
-              socket = new Socket(scheme+'://'+config.relayServer);
+              socket = new Socket(config.relayServer);
 
           socket.on('open', function () {
             console.log("Connected to relay");

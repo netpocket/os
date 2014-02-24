@@ -7,8 +7,7 @@ if (!token) { throw new Error("missing environment variable NOS_TOKEN"); }
 
   var config = {
     // relayServer: "http://luchia.local:1337",
-    relayServer: "ncc-relay.herokuapp.com",
-    secure: false,
+    relayServer: "http://ncc-relay.herokuapp.com",
     token: token
   };
 
