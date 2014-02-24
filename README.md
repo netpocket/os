@@ -1,33 +1,27 @@
-# Netpocket OS
+# NetpocketOS
 
-A thin layer that sits atop Raspbian.
-It turns your raspberry pi into a Netpocket device :)
+A small program designed for Raspberry Pi that exposes device features
+to peers over websockets.
 
-## Components
-
-* keepalive: ensures connectivity to the ncc-relay
-* modulectl: module control interface API and on/off toggle
-* bootctl: control which modules start on boot
-* rulectl: module-specific rules api
+Firewalls and difficult network configurations become irrelevant
+by utilizing an [intermediate
+relay](https://github.com/netpocket/ncc-relay) in communication with other devices.
 
 ## Requirements
 
+### Raspberry Pi
+
 * [Raspbian](http://www.raspbian.org/)
-* [ARM-compiled Node.js for hard-float](https://gist.github.com/adammw/3245130)
+* [Node.js for Raspbian](https://gist.github.com/adammw/3245130)
 
-## Install
+## Usage
 
-### From Official Repository
+### Raspbian
 
-Not yet implemented
-
-### From Source Code
-
-`script/install --relay RELAY_SERVER:PORT`
-
-## Package
-
-`script/package --relay RELAY_SERVER:PORT`
-
-This creates a netpocketos.deb installation file.
+```bash
+sudo apt-get install git
+git clone git@github.com:netpocket/netpocketos
+cd netpocketos
+node server.js
+```
 
