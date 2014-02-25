@@ -63,10 +63,10 @@ describe("Connection", function() {
             my: "payload",
             real: "special"
           });
-          expect(socket).to.write('recipient:identifier', {
+          expect(socket).to.writeAtLeast('recipient:identifier', {
             error: 400,
             reason: "Bad Request",
-            detail: "It's not clear what you want me to do. Giving up."
+            message: "Command not found: undefined"
           });
         });
       });
@@ -76,10 +76,10 @@ describe("Connection", function() {
           call.args[1]('recipient:identifier', {
             cmd: "wont resolve"
           });
-          expect(socket).to.write('recipient:identifier', {
+          expect(socket).to.writeAtLeast('recipient:identifier', {
             error: 400,
             reason: "Bad Request",
-            detail: "It's not clear what you want me to do. Giving up."
+            message: "Command not found: wont resolve"
           });
         });
       });
@@ -90,10 +90,9 @@ describe("Connection", function() {
             call.args[1]('recipient:identifier', {
               cmd: 'feature request'
             });
-            expect(socket).to.write('recipient:identifier', {
+            expect(socket).to.writeAtLeast('recipient:identifier', {
               error: 400,
               reason: "Bad Request",
-              detail: "It's not clear what you want me to do. Giving up."
             });
           });
         });
@@ -104,10 +103,9 @@ describe("Connection", function() {
               cmd: 'feature request',
               args: 'not an array'
             });
-            expect(socket).to.write('recipient:identifier', {
+            expect(socket).to.writeAtLeast('recipient:identifier', {
               error: 400,
               reason: "Bad Request",
-              detail: "It's not clear what you want me to do. Giving up."
             });
           });
         });
@@ -118,10 +116,9 @@ describe("Connection", function() {
               cmd: 'feature request',
               args: ['does', 'not', 'resolve']
             });
-            expect(socket).to.write('recipient:identifier', {
+            expect(socket).to.writeAtLeast('recipient:identifier', {
               error: 400,
               reason: "Bad Request",
-              detail: "It's not clear what you want me to do. Giving up."
             });
           });
         });

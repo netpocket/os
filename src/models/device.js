@@ -35,8 +35,13 @@ Device = Backbone.Model.extend({
    * This is funnelled back to the originator of the payload */
   inboundPayload: function(payload, cb) {
     try {
-      var feature = this.attributes.features[payload.args[0]];
-      var task = feature[payload.args[1]];
+      var task = { fn: function(callback) {
+        throw new Error('Command not found: '+payload.cmd);
+      } };
+      if (payload.cmd === "feature request") {
+        var feature = this.attributes.features[payload.args[0]];
+        task = feature[payload.args[1]];
+      }
       task.fn(function(err, res) {
         cb(null, {
           cmd: payload.cmd.replace(' request', ' response'),
@@ -49,7 +54,8 @@ Device = Backbone.Model.extend({
       cb({
         error: 400,
         reason: "Bad Request",
-        detail: "It's not clear what you want me to do. Giving up."
+        message: e.message,
+        stack: e.stack
       }, null);
     }
   }
