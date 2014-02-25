@@ -9,19 +9,20 @@ relay](https://github.com/netpocket/ncc-relay) in communication with other devic
 
 ## Requirements
 
-### Raspberry Pi
-
 * [Raspbian](http://www.raspbian.org/)
 * [Node.js for Raspbian](https://gist.github.com/adammw/3245130)
 
-## Usage
-
-### Raspbian
+## Install
 
 ```bash
-sudo apt-get install git
 git clone git@github.com:netpocket/netpocketos
-cd netpocketos
-node server.js
+```
+
+## Usage
+
+To get logging output, set `NODE_ENV=development`
+
+```bash
+NODE_ENV=development NOS_TOKEN=1 RELAY_SERVER=http://ncc-relay.herokuapp.com node server.js
 ```
 
