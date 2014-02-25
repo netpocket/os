@@ -1,45 +1,27 @@
-var _ = require('underscore')._,
+var fs = require('fs'),
+_ = require('underscore')._,
 Backbone = require('backbone'),
 Connection = require('../connection.js'),
 connection = null,
 Device = Backbone.Model.extend({
-  defaults: {
-    name: "unnamed",
-    features: {
-      os: {
-        'get uptime': {
-          fn: function(cb) {
-            cb(null, require('os').uptime());
-          }
-        }
-      },
-      pkg: {
-        'list': {
-          fn: function(cb) {
-            /* list installed apt packages */
-            cb("not yet implemented", null);
-          }
-        },
-        'install': {
-          fn: function(cb) {
-            /* install apt packages */
-            cb("not yet implemented", null);
-          }
-        },
-        'uninstall': {
-          fn: function(cb) {
-            /* uninstall apt packages */
-            cb("not yet implemented", null);
-          }
-        }
-      }
-    }
-  },
 
   initialize: function() {
-    /* Read some stuff in /etc, figure out what services
-     * this device provides... whatever else you want to stuff in
-     * attributes before you connect to the relay */
+    this.loadDeviceAttributes();
+    this.loadFeatures();
+  },
+
+  loadDeviceAttributes: function() {
+    var deviceConf = __dirname+'/../../etc/device.json';
+    this.attributes = require(deviceConf);
+  },
+
+  loadFeatures: function() {
+    this.attributes.features = {};
+    /* Load included features */
+    var featuresDir = __dirname+'/../../opt/device/features';
+    _.each(fs.readdirSync(featuresDir), function(name) {
+      this.attributes.features[name] = require(featuresDir+'/'+name+'/manifest.js');
+    }.bind(this));
   },
 
   connect: function(socket, config) {
@@ -57,7 +39,7 @@ Device = Backbone.Model.extend({
       var task = feature[payload.args[1]];
       task.fn(function(err, res) {
         cb(null, {
-          cmd: "feature response",
+          cmd: payload.cmd.replace(' request', ' response'),
           args: payload.args,
           err: err,
           res: res
