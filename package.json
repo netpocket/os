@@ -1,8 +1,7 @@
 {
   "name": "netpocketos",
   "version": "0.0.1",
-  "description": "A small program designed for Raspberry Pi that exposes device features
-to peers over websockets",
+  "description": "A small program designed for Raspberry Pi that exposes device features to peers over websockets",
   "main": "client.js",
   "scripts": {
     "start": "node server.js",
