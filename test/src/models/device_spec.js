@@ -46,18 +46,5 @@ describe("Device", function() {
         expect(spy).to.have.been.calledWith(null, '12345');
       });
     });
-
-    describe("packages", function() {
-      it("can list apt packages");
-      it("can install apt packages");
-    });
-  });
-
-  describe("configuration files", function() {
-    it("can create additional features");
-  });
-
-  describe("initialize", function() {
-    it("loads configuration files");
   });
 });
