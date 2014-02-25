@@ -20,7 +20,10 @@ Device = Backbone.Model.extend({
     /* Load included features */
     var featuresDir = __dirname+'/../../opt/device/features';
     _.each(fs.readdirSync(featuresDir), function(name) {
-      this.attributes.features[name] = require(featuresDir+'/'+name+'/manifest.js');
+      var modulePath = featuresDir+'/'+name+'/manifest.js';
+      if (fs.existsSync(modulePath)) {
+        this.attributes.features[name] = require(modulePath);
+      }
     }.bind(this));
   },
 
