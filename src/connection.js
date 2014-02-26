@@ -19,12 +19,17 @@ var Connection = (function(socket, config, device) {
     emit("i am a netpocketos device", config.token, device);
   });
 
+  // Request/Response (Feature Use)
   socket.on('relay', function(recipient_identifier, payload) {
     device.inboundPayload(payload, function(err, res) {
       emit(recipient_identifier, (err === null ? res : err));
     });
   });
 
+  // Model Changes
+  device.on('change', function() {
+    emit('device:'+config.token+':changed', device.changed);
+  });
 });
 
 module.exports = Connection;
