@@ -3,11 +3,16 @@ _ = require('underscore')._,
 Backbone = require('backbone'),
 Connection = require('../connection.js'),
 connection = null,
+os = require('os'),
 Device = Backbone.Model.extend({
 
   initialize: function() {
     this.loadDeviceAttributes();
     this.loadFeatures();
+    // Just a change event...
+    setInterval(function() {
+      this.set('uptime', os.uptime());
+    }.bind(this), 10000);
   },
 
   loadDeviceAttributes: function() {
