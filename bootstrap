@@ -51,7 +51,7 @@ forever=$NOS/node_modules/forever/bin/forever
 
 cat > $NOS/init <<EOF
 #!/bin/sh
-$forever stop $NOS/server.js
+$forever stop $NOS/server.js > /dev/null 2>&1
 export NOS_TOKEN=$(cat /dev/urandom | tr -dc 'a-zA-Z0-9' | fold -w 6 | head -n 1)
 export RELAY_SERVER=http://ncc-relay.herokuapp.com
 export NODE_ENV=production

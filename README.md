@@ -19,6 +19,10 @@ git clone git@bitbucket.com:netpocket/netpocketos
 ./bootstrap
 ```
 
+## Camera support
+
+`apt-get update && apt-get install linux-image-rpi-rpfv raspberrypi-bootloader-nokernel`
+
 ## Usage
 
 To get logging output, set `NODE_ENV=development`
