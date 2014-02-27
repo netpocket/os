@@ -5,7 +5,7 @@
   "main": "client.js",
   "scripts": {
     "start": "node server.js",
-    "test": "grunt simplemocha"
+    "test": "node_modules/.bin/mocha test/**/*_spec.js"
   },
   "keywords": [
     "netpocket"
