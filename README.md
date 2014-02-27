@@ -15,7 +15,12 @@ relay](https://github.com/netpocket/ncc-relay) in communication with other devic
 ## Install
 
 ```bash
-git clone git@github.com:netpocket/netpocketos
+# Assuming your base is rasbian-ua-netinst
+
+# Install Nodejs
+https://gist.github.com/raw/3245130/v0.10.24/node-v0.10.24-linux-arm-armv6j-vfp-hard.tar.gz
+
+git clone git@bitbucket.com:netpocket/netpocketos
 ```
 
 ## Usage
