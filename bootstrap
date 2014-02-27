@@ -1,0 +1,71 @@
+#!/bin/bash
+
+# TODO vendor all network dependecies
+
+# Assuming your base is raspbian-ua-netinst
+# NetpocketOS base OS will be installed on top
+
+DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+NOS=/opt/netpocketos
+if [[ ! -d $NOS ]]; then
+  if [[ ! "$DIR" -eq "$NOS" ]]; then
+    mv $DIR $NOS
+  fi
+fi
+
+if [[ ! -f $NOS/server.js ]]; then
+  echo "failed to install... check in $NOS"
+  exit 127
+fi
+
+if ! hash node 2>/dev/null; then
+  if ! hash curl 2>/dev/null; then
+    apt-get update
+    apt-get install -y curl
+    cd /tmp
+    if ! hash curl 2>/dev/null; then
+      echo "failed to install curl !"
+      exit 127
+    fi
+    local nodetar=/tmp/node.tar.gz
+    curl -o $nodetar https://gist.github.com/raw/3245130/v0.10.24/node-v0.10.24-linux-arm-armv6j-vfp-hard.tar.gz
+    cd /usr/local
+    tar xzvf $nodetar --strip=1
+    rm -rf $nodetar
+  fi
+fi
+
+if ! hash node 2>/dev/null; then
+  echo "failed to install node.js !"
+  exit 127
+fi
+
+
+cd $NOS
+
+npm install
+npm install -g forever
+
+cat > /etc/rc.local <<EOF
+#!/bin/sh -e
+#
+# rc.local
+#
+# This script is executed at the end of each multiuser runlevel.
+# Make sure that the script will "exit 0" on success or any other
+# value on error.
+#
+# In order to enable or disable this script just change the execution
+# bits.
+#
+# By default this script does nothing.
+
+forever start -l /opt/netpocketos/logs/nos.log -a /opt/netpocketos/server.js
+
+exit 0
+EOF
+
+echo "starting netpocketos"
+/etc/rc.local
+forever list
+echo "k thanks bye
