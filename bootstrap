@@ -7,6 +7,8 @@
 
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 NOS=/opt/netpocketos
+VENDOR=$NOS/vendor/raspbian_hardfloat
+
 if [[ ! -d $NOS ]]; then
   if [[ ! "$DIR" -eq "$NOS" ]]; then
     mv $DIR $NOS
@@ -18,8 +20,9 @@ if [[ ! -f $NOS/server.js ]]; then
   exit 127
 fi
 
+
 if ! hash node 2>/dev/null; then
-  nodetar=$NOS/vendor/node-v0.10.24-linux-arm-armv6j-vfp-hard.tar.gz
+  nodetar=$VENDOR/node-v0.10.24-linux-arm-armv6j-vfp-hard.tar.gz
   cd /usr/local
   tar xzvf $nodetar --strip=1
 fi
@@ -37,9 +40,12 @@ cd $NOS
 # apt-get update && apt-get install -y python build-essential
 # npm rebuild (or npm install from scratch)
 
+ln -s $VENDOR/node_modules $NOS/node_modules
+
 if ! npm test; then
   exit 127
 fi
+
 
 forever=$NOS/node_modules/forever/bin/forever
 
@@ -50,8 +56,14 @@ export NOS_TOKEN=$(cat /dev/urandom | tr -dc 'a-zA-Z0-9' | fold -w 6 | head -n 1
 export RELAY_SERVER=http://ncc-relay.herokuapp.com
 export NODE_ENV=production
 
+# TODO ditch forever, maybe use pm2 or whatever uses less ram,
+# is this even necessary considering how we are using cluster and domain?
+
+# TODO log rotation (use winston or logrotate)
+
 $forever start -l $NOS/nos.log -a $NOS/server.js
 EOF
+
 
 cat > /etc/rc.local <<EOF
 #!/bin/sh -e
