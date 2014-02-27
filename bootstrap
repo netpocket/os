@@ -14,25 +14,14 @@ if [[ ! -d $NOS ]]; then
 fi
 
 if [[ ! -f $NOS/server.js ]]; then
-  echo "failed to install... check in $NOS"
+  echo "failed to establish source directory"
   exit 127
 fi
 
 if ! hash node 2>/dev/null; then
-  if ! hash curl 2>/dev/null; then
-    apt-get update
-    apt-get install -y curl
-    cd /tmp
-    if ! hash curl 2>/dev/null; then
-      echo "failed to install curl !"
-      exit 127
-    fi
-    local nodetar=/tmp/node.tar.gz
-    curl -o $nodetar https://gist.github.com/raw/3245130/v0.10.24/node-v0.10.24-linux-arm-armv6j-vfp-hard.tar.gz
-    cd /usr/local
-    tar xzvf $nodetar --strip=1
-    rm -rf $nodetar
-  fi
+  nodetar=$NOS/vendor/node-v0.10.24-linux-arm-armv6j-vfp-hard.tar.gz
+  cd /usr/local
+  tar xzvf $nodetar --strip=1
 fi
 
 if ! hash node 2>/dev/null; then
@@ -42,9 +31,6 @@ fi
 
 
 cd $NOS
-
-npm install
-npm install -g forever
 
 cat > $NOS/init <<EOF
 #!/bin/sh
