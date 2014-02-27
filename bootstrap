@@ -32,6 +32,10 @@ fi
 
 cd $NOS
 
+if ! npm test; then
+  exit 127
+fi
+
 forever=$NOS/node_modules/forever/bin/forever
 
 cat > $NOS/init <<EOF
