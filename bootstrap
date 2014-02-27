@@ -46,26 +46,21 @@ cd $NOS
 npm install
 npm install -g forever
 
+cat > $NOS/init <<EOF
+#!/bin/sh
+$(which forever) stop $NOS/server.js"
+export NOS_TOKEN=$(cat /dev/urandom | tr -dc 'a-zA-Z0-9' | fold -w 6 | head -n 1)
+export RELAY_SERVER=http://ncc-relay.herokuapp.com
+export NODE_ENV=production
+$(which forever) start -l $NOS/nos.log -a $NOS/server.js"
+EOF
+
 cat > /etc/rc.local <<EOF
 #!/bin/sh -e
-#
-# rc.local
-#
-# This script is executed at the end of each multiuser runlevel.
-# Make sure that the script will "exit 0" on success or any other
-# value on error.
-#
-# In order to enable or disable this script just change the execution
-# bits.
-#
-# By default this script does nothing.
-
-forever start -l /opt/netpocketos/logs/nos.log -a /opt/netpocketos/server.js
-
+su - root "$NOS/init"
 exit 0
 EOF
 
 echo "starting netpocketos"
 /etc/rc.local
 forever list
-echo "k thanks bye
