@@ -45,7 +45,7 @@ export NOS_TOKEN=$(cat /dev/urandom | tr -dc 'a-zA-Z0-9' | fold -w 6 | head -n 1
 export RELAY_SERVER=http://ncc-relay.herokuapp.com
 export NODE_ENV=production
 
-$forever start -l $NOS/nos.log -a $NOS/server.js"
+$forever start -l $NOS/nos.log -a $NOS/server.js
 EOF
 
 cat > /etc/rc.local <<EOF
@@ -56,4 +56,3 @@ EOF
 
 echo "starting netpocketos"
 /etc/rc.local
-$forever list
