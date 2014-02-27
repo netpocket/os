@@ -17,7 +17,8 @@
     "sockjs": "~0.3.8",
     "sockjs-client-node": "0.0.0",
     "underscore": "~1.6.0",
-    "backbone": "~1.1.2"
+    "backbone": "~1.1.2",
+    "forever": "~0.10.11"
   },
   "devDependencies": {
     "grunt-simple-mocha": "~0.4.0",
@@ -26,6 +27,6 @@
     "grunt": "~0.4.2",
     "istanbul": "~0.2.4",
     "grunt-contrib-jshint": "~0.8.0",
-    "primus-sinon-chai": "0.0.1"
+    "primus-sinon-chai": "~0.0.4"
   }
 }
