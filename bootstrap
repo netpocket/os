@@ -32,6 +32,11 @@ fi
 
 cd $NOS
 
+# vendor/raspbian_hardfloat/node_modules is pre-built
+# to deploy elsewhere you must do equivalent of
+# apt-get update && apt-get install -y python build-essential
+# npm rebuild (or npm install from scratch)
+
 if ! npm test; then
   exit 127
 fi
