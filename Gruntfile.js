@@ -4,6 +4,8 @@ var sources = [
   'src/**/*.js'
 ];
 
+var js = sources.concat('test/**/*.js');
+
 module.exports = function(grunt) {
   grunt.initConfig({
     simplemocha: {
@@ -30,9 +32,30 @@ module.exports = function(grunt) {
 
     watch: {
       scripts: {
-        files: sources.concat('test/**/*.js'),
+        files: js,
         tasks: ['default']
-      }
+      },
+      pi: {
+        options: { spawn: false },
+        files: js,
+        tasks: [/* transfers the file */]
+      },
+    }
+  });
+
+  grunt.event.on('watch', function(action, filepath, target) {
+    if (target === 'pi') {
+      var child = grunt.util.spawn({
+        cmd: "scp",
+        args: [
+          filepath,
+          'root@192.168.0.107:/opt/netpocketos/'+filepath
+        ]
+      }, function() {
+        grunt.log.writeln("Transferred "+filepath);
+      });
+      child.stdout.pipe(process.stdout);
+      child.stderr.pipe(process.stderr);
     }
   });
 
