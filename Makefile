@@ -14,13 +14,19 @@
 ##
 
 ##
+# Server watcher reloader for use on the Pi
 # Required: npm install node-dev
 servepi:
 	NOS_TOKEN=LSv2K2 RELAY_SERVER=http://luchia.local:1337 NODE_ENV=development node_modules/node-dev/bin/node-dev ./server.js
 
 ##
+# Spec watcher runner for use on the Pi
 # NOS_PI may be used to test integration points such as
 # interfacing with Pi binaries like raspistill & friends
 specpi:
-	NOS_PI=1 node_modules/.bin/mocha test/**/*_spec.js -w
+	NOS_PI=1 node_modules/.bin/mocha test/\*\*/\*_spec.js -w
 
+##
+# Simple spec watcher runner
+spec:
+	node_modules/.bin/mocha test/\*\*/\*_spec.js -w
