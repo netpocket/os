@@ -9,10 +9,10 @@ Device = Backbone.Model.extend({
   initialize: function() {
     this.loadDeviceAttributes();
     this.loadFeatures();
-    // Just a change event...
+    /* Just a change event...
     setInterval(function() {
       this.set('uptime', os.uptime());
-    }.bind(this), 10000);
+    }.bind(this), 10000); */
   },
 
   loadDeviceAttributes: function() {

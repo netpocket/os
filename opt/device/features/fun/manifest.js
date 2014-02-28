@@ -4,36 +4,38 @@
  * patterns and help us to start to support streaming too
  * */
 
-var http = require('http');
-
-var url = "http://upload.wikimedia.org/wikipedia/commons/a/af/Tux.png";
+var exec = require('child_process').exec;
+var fs = require('fs');
 
 module.exports = function(device) {
   return {
     'tux.png (url)': {
       fn: function(cb) {
+        var url = "http://upload.wikimedia.org/wikipedia/commons/a/af/Tux.png";
         cb(null, {
           contentType: 'image/url',
           content: url
         });
       }
     },
-    'tux.png (base64)': {
-      /* We'll be sending the tux image as base64 over websockets for
-       * display in a canvas or img tag on the other side */
-      stream: true,
-      fn: function(cb, stream) {
-        http.get(url, function(res) {
-          res.on('data', function (chunk) {
-            stream.write('stream', chunk, {});
-          });
-          res.on('end', function() {
+    'get still': {
+      meta: {
+        docs_url: 'https://github.com/raspberrypi/userland/blob/master/host_applications/linux/apps/raspicam/RaspiCamDocs.odt'
+      },
+      fn: function(cb) {
+        exec('/opt/vc/bin/raspistill -w 640 -h 480 -o - | base64 > /tmp/still.jpg.base64', function(err, stdout, stderr){
+          if (err !== null) {
+            cb({
+              stderr: stderr,
+              message: err.message,
+              stack: err.stack
+            }, null);
+          } else {
             cb(null, {
-              stream: 'done'
+              contentType: 'image/jpg (base64)',
+              content: fs.readFileSync('/tmp/still.jpg.base64').toString()
             });
-          });
-        }).on('error', function(e) {
-          cb(e, null);
+          }
         });
       }
     }

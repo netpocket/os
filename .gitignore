@@ -1,4 +1,6 @@
 node_modules
 init
-nos.log
+dev
+*.log
+.*.swp
 coverage
