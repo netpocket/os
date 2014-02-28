@@ -1,0 +1,11 @@
+Features I want to see next:
+
+* Built-in code editor (codemirror)
+  - settings tab (editing the etc/device.json directly)
+    - this gets linted by jslint on the client side
+    - it also gets linted by our own rules
+      e.g. must have a name
+    - this is how you will configure wifi for now
+  - allow user view source, add, and edit features/tasks
+* video streaming
+* audio streaming
