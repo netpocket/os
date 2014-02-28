@@ -42,6 +42,8 @@ cd $NOS
 
 ln -s $VENDOR/node_modules $NOS/node_modules
 
+export NOS_PI=1 # Ensure that the raspberry pi related test are also executed
+
 if ! npm test; then
   exit 127
 fi
