@@ -2,16 +2,7 @@
 # apt-get update
 # apt-get -y upgrade
 # apt-get -y install vim tmux git build-essential libxml2-dev python2.7 python2.7-dev fuse libtool autoconf libusb-1.0-0-dev libfuse-dev
-cd /tmp
-# if [[ -d iphone_libs ]]; then
-#   rm -rf iphone_libs
-# fi
-mkdir iphone_libs && cd iphone_libs
-git clone https://github.com/libimobiledevice/libplist.git
-git clone https://github.com/libimobiledevice/libusbmuxd.git
-git clone https://github.com/libimobiledevice/usbmuxd.git
-git clone https://github.com/libimobiledevice/libimobiledevice.git
-git clone https://github.com/libimobiledevice/ifuse.git
+tar -zxvf iphone.tar.gz
 #export PKG_CONFIG_PATH=/usr/local/lib/pkgconfig
 #echo "export PKG_CONFIG_PATH=/usr/local/lib/pkgconfig" | tee -a /etc/bash.bashrc
 #cd libplist && ./autogen.sh && make && make install && cd ..
