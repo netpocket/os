@@ -31,7 +31,3 @@ specpi:
 spec:
 	node_modules/.bin/mocha test/\*\*/\*_spec.js -w
 
-##
-# Use your iOS 7 device as an internet connection
-ios_tether:
-	cat vendor/extras/setup_iphone_tethering | bash
