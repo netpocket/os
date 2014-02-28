@@ -9,15 +9,6 @@ var fs = require('fs');
 
 module.exports = function(device) {
   return {
-    'tux.png (url)': {
-      fn: function(cb) {
-        var url = "http://upload.wikimedia.org/wikipedia/commons/a/af/Tux.png";
-        cb(null, {
-          contentType: 'image/url',
-          content: url
-        });
-      }
-    },
     'get still': {
       meta: {
         docs_url: 'https://github.com/raspberrypi/userland/blob/master/host_applications/linux/apps/raspicam/RaspiCamDocs.odt'
