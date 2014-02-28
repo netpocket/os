@@ -33,10 +33,19 @@ spec:
 
 ##
 # Use your iOS 7 device as an internet connection
-iphone_tetherable:
+iphone_tetherable: ipheth_apt ipheth_src
+
+ipheth_apt:
 	apt-get update
 	apt-get -y upgrade
 	apt-get -y install vim tmux git build-essential libxml2-dev python2.7 python2.7-dev fuse libtool autoconf libusb-1.0-0-dev libfuse-dev
+
+ipheth_src:
+	cd /tmp
+	echo `pwd`
+	if [[ -d iphone_libs ]]; then
+		rm -rf iphone_libs
+	fi
 	mkdir iphone_libs && cd iphone_libs
 	git clone https://github.com/libimobiledevice/libplist.git
 	git clone https://github.com/libimobiledevice/libusbmuxd.git
