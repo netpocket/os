@@ -1,7 +1,11 @@
 #!/bin/sh
+
+# Good docs
+# https://wiki.debian.org/WiFi/HowToUse
+
 if ! hash iwlist 2>/dev/null; then
   apt-get update
-  apt-get install wireless-tools
+  apt-get install wireless-tools wpasupplicant
 fi
 
 if [[ ! -f /etc/wpa_supplicant/wpa_supplicant.conf  ]]; then
@@ -10,19 +14,17 @@ if [[ ! -f /etc/wpa_supplicant/wpa_supplicant.conf  ]]; then
 allow-hotplug wlan0
 auto wlan0
 iface wlan0 inet dhcp
-wpa-roam /etc/wpa_supplicant/wpa_supplicant.conf
+wpa-config /etc/wpa_supplicant/wpa_supplicant.conf
 EOF
 
   mkdir /etc/wpa_supplicant
   # Stubbing the wireless config file.
+  # This configuration will connect to any open access point available
   # User will setup correct values from the web ui
   cat > /etc/wpa_supplicant/wpa_supplicant.conf <<EOF
-ssid=""
-proto=RSN
-key_mgmt=WPA-PSK
-pairwise=CCMP TKIP
-group=CCMP TKIP
-psk=""
+network={
+  key_mgmt=NONE
+}
 EOF
 
 fi
