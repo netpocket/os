@@ -1,3 +1,5 @@
+var piUserHost = "root@192.168.0.107";
+var fs = require('fs');
 var sources = [
   'Gruntfile.js',
   'server.js',
@@ -46,15 +48,32 @@ module.exports = function(grunt) {
 
   grunt.event.on('watch', function(action, filepath, target) {
     if (target === 'pi') {
-      var child = grunt.util.spawn({
-        cmd: "scp",
-        args: [
-          filepath,
-          'root@192.168.0.107:/opt/netpocketos/'+filepath
-        ]
-      }, function() {
-        grunt.log.writeln("Transferred "+filepath);
-      });
+      var child = null;
+      remotePath = '/opt/netpocketos/'+filepath;
+      if (fs.lstatSync(filepath).isDirectory()) {
+        // Make directory remotely
+        child = grunt.util.spawn({
+          cmd: "ssh",
+          args: [
+            piUserHost,
+            "mkdir",
+            remotePath
+          ]
+        }, function() {
+          grunt.log.writeln("Created folder "+remotePath);
+        });
+      } else {
+        // Transfer the file
+        child = grunt.util.spawn({
+          cmd: "scp",
+          args: [
+            filepath,
+            piUserHost+':'+remotePath
+          ]
+        }, function() {
+          grunt.log.writeln("Transferred "+remotePath);
+        });
+      }
       child.stdout.pipe(process.stdout);
       child.stderr.pipe(process.stderr);
     }
