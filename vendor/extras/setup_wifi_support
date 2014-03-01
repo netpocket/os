@@ -1,0 +1,28 @@
+#!/bin/sh
+if ! hash iwlist 2>/dev/null; then
+  apt-get update
+  apt-get install wireless-tools
+fi
+
+if [[ ! -f /etc/wpa_supplicant/wpa_supplicant.conf  ]]; then
+  # Add wireless interface
+  cat >> /etc/network/interfaces <<EOF
+allow-hotplug wlan0
+auto wlan0
+iface wlan0 inet dhcp
+wpa-roam /etc/wpa_supplicant/wpa_supplicant.conf
+EOF
+
+  mkdir /etc/wpa_supplicant
+  # Stubbing the wireless config file.
+  # User will setup correct values from the web ui
+  cat > /etc/wpa_supplicant/wpa_supplicant.conf <<EOF
+ssid=""
+proto=RSN
+key_mgmt=WPA-PSK
+pairwise=CCMP TKIP
+group=CCMP TKIP
+psk=""
+EOF
+
+fi
