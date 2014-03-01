@@ -11,9 +11,9 @@ var fs = require('fs');
 
 module.exports = function(device) {
   return {
-    'get still': {
+    'get still (320x240)': {
       fn: function(cb) {
-        exec('/opt/vc/bin/raspistill -w 640 -h 480 -o - | base64 > /tmp/still.jpg.base64', function(err, stdout, stderr){
+        exec('/opt/vc/bin/raspistill -w 320 -h 240 -o - | base64 > /tmp/still.jpg.base64', function(err, stdout, stderr){
           if (err !== null) {
             cb({
               stderr: stderr,
@@ -29,28 +29,46 @@ module.exports = function(device) {
         });
       }
     },
-    'get still (rgb matrix)': {
+    'get still (320x240 rgb matrix)': {
       requires: {
+        python: true,
         pythonModule: {
-          URL: "http://effbot.org/downloads/Imaging-1.1.7.tar.gz",
-          Homepage: "http://effbot.org/downloads/Imaging-1.1.7.tar.gz"
+          homepage: "http://www.pythonware.com/products/pil/",
+          camera: "http://effbot.org/downloads/Imaging-1.1.7.tar.gz"
         }
       },
       fn: function(cb) {
-        exec('/opt/vc/bin/raspiyuv -w 640 -h 480 -o - | base64 > /tmp/still.jpg.base64', function(err, stdout, stderr){
-          if (err !== null) {
-            cb({
-              stderr: stderr,
-              message: err.message,
-              stack: err.stack
-            }, null);
-          } else {
-            cb(null, {
-              contentType: 'image/jpg (base64)',
-              content: fs.readFileSync('/tmp/still.jpg.base64').toString()
-            });
-          }
-        });
+        var pyScriptPath = '/opt/netpocketos/opt/device/features/camera/python/rgbmatrix.py';
+        if (fs.existsSync(pyScriptPath)) {
+          exec('/opt/vc/bin/raspiyuv -w 32 -h 24 -o > /tmp/still.rgb', function(err, stdout, stderr){
+            if (err !== null) {
+              cb({
+                stderr: stderr,
+                message: err.message,
+                stack: err.stack
+              }, null);
+            } else {
+              exec('node /opt/netpocketos/opt/device/features/camera/rgbMatrix.js /tmp/still.rgb', function(err2, stdout2, stderr2){
+                if (err2 !== null) {
+                  cb({
+                    stderr: stderr2,
+                    message: err2.message,
+                    stack: err2.stack
+                  }, null);
+                } else {
+                  cb(null, {
+                    contentType: 'text/plain',
+                    content: stdout2
+                  });
+                }
+              });
+            }
+          });
+        } else {
+          cb({
+            message: "Missing python script ("+pyScriptPath+")"
+          }, null);
+        }
       }
     }
   };
