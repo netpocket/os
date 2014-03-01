@@ -17,6 +17,7 @@
 # Server watcher reloader for use on the Pi
 # Required: npm install node-dev
 servepi:
+	/opt/netpocketos/node_modules/forever/bin/forever stop /opt/netpocketos/server.js > /dev/null 2>&1
 	NOS_TOKEN=LSv2K2 RELAY_SERVER=http://luchia.local:1337 NODE_ENV=development node_modules/node-dev/bin/node-dev ./server.js
 
 ##
@@ -31,7 +32,3 @@ specpi:
 spec:
 	node_modules/.bin/mocha test/\*\*/\*_spec.js -w
 
-##
-# Use your iOS 7 device as an internet connection
-ios_tether:
-	cat vendor/extras/setup_iphone_tethering | bash

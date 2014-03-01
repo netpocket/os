@@ -1,17 +1,17 @@
 #!/bin/sh
-# apt-get update
-# apt-get -y upgrade
-# apt-get -y install vim tmux git build-essential libxml2-dev python2.7 python2.7-dev fuse libtool autoconf libusb-1.0-0-dev libfuse-dev
+apt-get update
+apt-get -y upgrade
+apt-get -y install vim tmux git build-essential libxml2-dev python2.7 python2.7-dev fuse libtool autoconf libusb-1.0-0-dev libfuse-dev
 tar -zxvf iphone.tar.gz
-#export PKG_CONFIG_PATH=/usr/local/lib/pkgconfig
-#echo "export PKG_CONFIG_PATH=/usr/local/lib/pkgconfig" | tee -a /etc/bash.bashrc
-#cd libplist && ./autogen.sh && make && make install && cd ..
-#cd libusbmuxd && ./autogen.sh && make && make install && cd ..
-#cd libimobiledevice && ./autogen.sh && make && make install && cd ..
-#cd usbmuxd && ./autogen.sh && make && make install && cd ..
-#cd ifuse && ./autogen.sh && make && make install && cd ..
-#groupadd -g 140 usbmux &>/dev/null
-#useradd -c 'usbmux user' -u 140 -g usbmux -d / -s /sbin/nologin usbmux &>/dev/null
-#passwd -l usbmux &>/dev/null
-#echo /usr/local/lib | tee /etc/ld.so.conf.d/libimobiledevice-libs.conf
-#ldconfig
+export PKG_CONFIG_PATH=/usr/local/lib/pkgconfig
+echo "export PKG_CONFIG_PATH=/usr/local/lib/pkgconfig" | tee -a /etc/bash.bashrc
+cd libplist && ./autogen.sh && make && make install && cd ..
+cd libusbmuxd && ./autogen.sh && make && make install && cd ..
+cd libimobiledevice && ./autogen.sh && make && make install && cd ..
+cd usbmuxd && ./autogen.sh && make && make install && cd ..
+cd ifuse && ./autogen.sh && make && make install && cd ..
+groupadd -g 140 usbmux &>/dev/null
+useradd -c 'usbmux user' -u 140 -g usbmux -d / -s /sbin/nologin usbmux &>/dev/null
+passwd -l usbmux &>/dev/null
+echo /usr/local/lib | tee /etc/ld.so.conf.d/libimobiledevice-libs.conf
+ldconfig
