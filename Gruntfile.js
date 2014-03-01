@@ -1,7 +1,8 @@
 var sources = [
   'Gruntfile.js',
   'server.js',
-  'src/**/*.js'
+  'src/**/*.js',
+  'opt/**/*.js'
 ];
 
 var js = sources.concat('test/**/*.js');
