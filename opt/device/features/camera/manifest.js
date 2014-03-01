@@ -29,7 +29,7 @@ module.exports = function(device) {
         });
       }
     },
-    'get still (320x240 rgb matrix)': {
+    'get rgb triplets (64x48)': {
       requires: {
         python: true,
         pythonModule: {
@@ -38,37 +38,30 @@ module.exports = function(device) {
         }
       },
       fn: function(cb) {
-        var pyScriptPath = '/opt/netpocketos/opt/device/features/camera/python/rgbmatrix.py';
-        if (fs.existsSync(pyScriptPath)) {
-          exec('/opt/vc/bin/raspiyuv -w 32 -h 24 -o > /tmp/still.rgb', function(err, stdout, stderr){
-            if (err !== null) {
-              cb({
-                stderr: stderr,
-                message: err.message,
-                stack: err.stack
-              }, null);
-            } else {
-              exec('node /opt/netpocketos/opt/device/features/camera/rgbMatrix.js /tmp/still.rgb', function(err2, stdout2, stderr2){
-                if (err2 !== null) {
-                  cb({
-                    stderr: stderr2,
-                    message: err2.message,
-                    stack: err2.stack
-                  }, null);
-                } else {
-                  cb(null, {
-                    contentType: 'text/plain',
-                    content: stdout2
-                  });
-                }
-              });
-            }
-          });
-        } else {
-          cb({
-            message: "Missing python script ("+pyScriptPath+")"
-          }, null);
-        }
+        exec('/opt/vc/bin/raspiyuv -w 64 -h 48 -o /tmp/still.rgb', function(err, stdout, stderr){
+          if (err !== null) {
+            cb({
+              stderr: stderr,
+              message: err.message,
+              stack: err.stack
+            }, null);
+          } else {
+            exec('node /opt/netpocketos/opt/device/features/camera/rgbMatrix.js /tmp/still.rgb 64 48', function(err2, stdout2, stderr2){
+              if (err2 !== null) {
+                cb({
+                  stderr: stderr2,
+                  message: err2.message,
+                  stack: err2.stack
+                }, null);
+              } else {
+                cb(null, {
+                  contentType: 'text/plain',
+                  content: stdout2
+                });
+              }
+            });
+          }
+        });
       }
     }
   };
