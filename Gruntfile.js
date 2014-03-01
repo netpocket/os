@@ -1,7 +1,6 @@
 var piUserHost = "root@192.168.0.107";
 var fs = require('fs');
 var sources = [
-  'Gruntfile.js',
   'server.js',
   'src/**/*.js',
   'opt/**/*'
@@ -70,8 +69,10 @@ module.exports = function(grunt) {
             filepath,
             piUserHost+':'+remotePath
           ]
-        }, function() {
-          grunt.log.writeln("Transferred "+remotePath);
+        }, function(err) {
+          if (err !== null) {
+            grunt.log.writeln("Transferred "+remotePath);
+          }
         });
       }
       child.stdout.pipe(process.stdout);
