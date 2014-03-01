@@ -1,6 +1,5 @@
 #!/bin/bash
 
-# TODO vendor all network dependecies
 
 # Assuming your base is raspbian-ua-netinst
 # NetpocketOS base OS will be installed on top
@@ -32,7 +31,6 @@ if ! hash node 2>/dev/null; then
   exit 127
 fi
 
-
 cd $NOS
 
 # vendor/raspbian_hardfloat/node_modules is pre-built
@@ -43,11 +41,9 @@ cd $NOS
 ln -s $VENDOR/node_modules $NOS/node_modules
 
 export NOS_PI=1 # Ensure that the raspberry pi related test are also executed
-
 if ! npm test; then
   exit 127
 fi
-
 
 forever=$NOS/node_modules/forever/bin/forever
 
@@ -66,12 +62,16 @@ export NODE_ENV=production
 $forever start -l $NOS/nos.log -a $NOS/server.js
 EOF
 
-
 cat > /etc/rc.local <<EOF
 #!/bin/sh -e
 su - root "$NOS/init"
 exit 0
 EOF
 
-echo "starting netpocketos"
-/etc/rc.local
+# TODO bootstrap camera/firmware stuff
+
+# Enable wifi (TODO uses apt)
+cat $NOS/vendor/extras/setup_wifi_support | sh
+
+echo "sending reboot signal"
+reboot
