@@ -9,6 +9,9 @@ describe("Feature: camera", function () {
       it("requires raspistill", function() {
         expect(fs.existsSync('/opt/vc/bin/raspistill')).to.eq(true);
       });
+      it("requires raspiyuv", function() {
+        expect(fs.existsSync('/opt/vc/bin/raspiyuv')).to.eq(true);
+      });
     });
   });
   describe("get still", function() {
