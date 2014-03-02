@@ -41,6 +41,17 @@ Device = Backbone.Model.extend({
     this.connection = connection = new Connection(socket, config, this);
   },
 
+
+  findAction: function (path) {
+    var obj = this.get('features');
+    _.each(path, function (i) {
+      if (typeof obj[i] !== "undefined") {
+        obj = obj[i];
+      }
+    });
+    return obj;
+  },
+
   /* Relay brings device a payload from browsers and/or other
    * devices through this method. Respond in (err, res)
    * style using the callback provided.
@@ -52,8 +63,7 @@ Device = Backbone.Model.extend({
         throw new Error('Command not found: '+payload.cmd);
       } };
       if (payload.cmd === "feature request") {
-        var feature = this.attributes.features[payload.args[0]];
-        task = feature[payload.args[1]];
+        task = this.findAction(payload.args);
       }
       task.fn(function(err, res) {
         cb(null, {
@@ -62,13 +72,13 @@ Device = Backbone.Model.extend({
           err: err,
           res: res
         });
-      });
+      }, payload);
     } catch (e) {
       cb({
         error: 400,
         reason: "Bad Request",
         message: e.message,
-        stack: e.stack
+        stack: e.stack.split('\n')
       }, null);
     }
   }

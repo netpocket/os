@@ -21,12 +21,35 @@ module.exports = function(device) {
       }
     },
     'configure wifi': {
+      /* this action is interactive, presenting a form, and allowing the user to interact
+       * it also shows how to construct interactions in this way. */
+      modal: {
+        okText: "Save"
+      },
+      /* 2 bash commands to join a new WPA2 network
+       *
+       * wpa_passphrase LaundryRoom columbus > /etc/wpa_supplicant/wpa_supplicant.conf
+       * wpa_supplicant -B -iwlan0 -c/etc/wpa_supplicant.conf -Dwext && dhclient wlan0
+       */
+      submit: {
+        fn: function(cb, payload) {
+          var essid = payload.params[0];
+          var psk = payload.params[1];
+          if (essid === "Choose Network") {
+            cb("Invalid selection", null);
+          } else if (essid === "any") {
+            cb("Only WPA2 network are currently supported right now.", null);
+          } else if (psk.length < 8) {
+            cb("Passphrase is too short (must be at least 8 characters)", null);
+          } else if (psk.length >= 8) {
+            exec("wpa_passphrase "+essid+" "+psk+" > /etc/wpa_supplicant/wpa_supplicant.conf", function(error, stdout, stderr) {
+              cb(null, "Set to use "+essid+" from now on with the supplied password. "+
+                 "To apply changes immediately, press escape and reload network interfaces from the the main menu.");
+            });
+          }
+        }
+      },
       fn: function(cb) {
-        /* 2 bash commands to join a new WPA2 network
-         *
-         * wpa_passphrase LaundryRoom columbus > /etc/wpa_supplicant/wpa_supplicant.conf
-         * wpa_supplicant -B -iwlan0 -c/etc/wpa_supplicant.conf -Dwext && dhclient wlan0
-         */
         require('iwlist')('wlan0').scan(function(err, res) {
           if (err !== null) {
             cb({
@@ -42,16 +65,16 @@ module.exports = function(device) {
               tag: 'em',
               html: "Note: if you make a mistake you can plug in the ethernet cable and you can try again"
             },{
-              tag: 'input',
-              type: 'select',
+              tag: 'select',
               children: [
                 { tag: 'option', selected:'selected', html: 'Choose Network' },
                 { tag: 'option', value: 'any', html: 'Any nearby unsecured network' }
               ].concat(_.map(res, function(n) {
-                return { tag: 'option', value: n.address, html: n.essid+' (strength: '+n.signal+')' };
+                return { tag: 'option', value: n.essid, html: n.essid+' (strength: '+n.signal+')' };
               }))
             },{
               tag: 'input',
+              placeholder: "Pre-shared Key",
               type: 'text',
               label: 'Password'
             }];
@@ -63,16 +86,6 @@ module.exports = function(device) {
             });
           }
         });
-      },
-      /* this action is interactive, presenting a form, and allowing the user to interact
-       * it also shows how to construct interactions in this way.
-       *
-       * notice that inputs come back as arguments in the order in which they
-       * are provided in the form.elements array */
-      form: {
-        submit: function(ssid, psk) {
-
-        }
       }
     },
     'get hostname': {
@@ -91,7 +104,7 @@ module.exports = function(device) {
      * and call this function to keep trying our best to get an IP */
     'reload network interfaces': {
       responds: false,
-      fn: function() {
+      fn: function(cb) {
         exec('/etc/init.d/networking reload', function(err, stdout, stderr){
           if (err !== null) {
             cb({
