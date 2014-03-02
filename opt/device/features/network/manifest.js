@@ -63,7 +63,7 @@ module.exports = function(device) {
               html: "Choose a WPA2 network and provide the key:"
             },{
               tag: 'em',
-              html: "Note: if you make a mistake you can plug in the ethernet cable and you can try again"
+              html: "Note: if you make a mistake you can plug in the ethernet cable and retry"
             },{
               tag: 'select',
               children: [
