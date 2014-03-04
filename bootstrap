@@ -1,8 +1,12 @@
 #!/bin/bash
 
-
 # Assuming your base is raspbian-ua-netinst
-# NetpocketOS base OS will be installed on top
+# NetpocketOS will be installed after some initial tweaks
+
+# Automatically run fsck on reboot if necessary
+sed 's/#FSCKFIX=no/FSCKFIX=yes/' /etc/default/rcS > ~/tmprcS ; cat tmprcS > /etc/default/rcS ; rm tmprcS
+
+# -------
 
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 NOS=/opt/netpocketos
