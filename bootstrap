@@ -1,13 +1,5 @@
 #!/bin/bash
 
-# Assuming your base is raspbian-ua-netinst
-# NetpocketOS will be installed after some initial tweaks
-
-# Automatically run fsck on reboot if necessary
-sed 's/#FSCKFIX=no/FSCKFIX=yes/' /etc/default/rcS > ~/tmprcS ; cat tmprcS > /etc/default/rcS ; rm tmprcS
-
-# -------
-
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 NOS=/opt/netpocketos
 VENDOR=$NOS/vendor/raspbian_hardfloat
@@ -18,11 +10,34 @@ if [[ ! -d $NOS ]]; then
   fi
 fi
 
+# Assuming your base is raspbian-ua-netinst
+# NetpocketOS will be installed after some initial tweaks
+
+apt-get update
+apt-get upgrade
+
+# Enable camera and other Pi firmware
+wget https://raw.github.com/Hexxeh/rpi-update/master/rpi-update -O /usr/bin/rpi-update && chmod +x /usr/bin/rpi-update
+rpi-update
+echo "/opt/vc/lib" > /etc/ld.so.conf.d/00-vmcs.conf
+ldconfig
+
+# Enable wifi support
+cat $NOS/vendor/extras/setup_wifi_support | sh
+
+# Enable iphone tethering
+cat $NOS/vendor/extras/setup_iphone_tethering | sh
+
+# Automatically run fsck on reboot if necessary
+sed 's/#FSCKFIX=no/FSCKFIX=yes/' /etc/default/rcS > ~/tmprcS ; cat tmprcS > /etc/default/rcS ; rm tmprcS
+
+
+# -------
+
 if [[ ! -f $NOS/server.js ]]; then
   echo "failed to establish source directory"
   exit 127
 fi
-
 
 if ! hash node 2>/dev/null; then
   nodetar=$VENDOR/node-v0.10.24-linux-arm-armv6j-vfp-hard.tar.gz
@@ -71,11 +86,6 @@ cat > /etc/rc.local <<EOF
 su - root "$NOS/init"
 exit 0
 EOF
-
-# TODO bootstrap camera/firmware stuff
-
-# Enable wifi (TODO uses apt)
-cat $NOS/vendor/extras/setup_wifi_support | sh
 
 echo "sending reboot signal"
 reboot
