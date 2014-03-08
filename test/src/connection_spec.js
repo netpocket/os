@@ -150,5 +150,13 @@ describe("Connection", function() {
         });
       });
     });
+
+    it("transmits device changes", function() {
+      device.set('something', null);
+      device.set('something', {the:'value'});
+      expect(socket).to.write('device:token:changed', {
+        "something": { "the": "value" }
+      });
+    });
   });
 });
