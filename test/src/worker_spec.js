@@ -41,7 +41,9 @@ describe("Worker", function() {
       beforeEach(function() {
         socket = {
           on: sinon.stub(),
-          write: sinon.stub()
+          write: sinon.stub(),
+          emit: {apply: sinon.stub()},
+          reserved: sinon.stub()
         };
         sinon.stub(Primus, 'createSocket').returns(function() {
           return socket;
@@ -56,6 +58,28 @@ describe("Worker", function() {
       it("requests the primus spec", function() {
         var specURL = config.relayServer+'/primus/spec';
         expect(http.get.getCall(0).args[0]).to.eq(specURL);
+      });
+
+      it("listens to the socket's 'data' event", function() {
+        expect(socket.on.getCall(1).args[0]).to.eq('data');
+      });
+
+      describe("socket data event", function() {
+        var fn = null;
+        var data = null;
+        beforeEach(function() {
+          fn = socket.on.getCall(1).args[1];
+          data = {args: ['event:name', {'my':'data'}]};
+          fn(data);
+        });
+        it("checks if we will clash with a Primus reserved word", function() {
+          expect(socket.reserved).to.have.been.calledWith('event:name');
+        });
+        it("applies the data to the socket's emit method", function() {
+          expect(socket.emit.apply.getCall(0).args[0]).to.eq(socket);
+          expect(socket.emit.apply.getCall(0).args[1]).to.eq(data.args);
+        });
+        
       });
 
       afterEach(function() {
