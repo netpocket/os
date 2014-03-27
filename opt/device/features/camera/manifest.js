@@ -38,22 +38,7 @@ module.exports = function(device) {
         if (! camera.isArmed()) {
           cb("Not armed", null);
         } else {
-          camera.getStill(function(path) {
-            exec('cat '+path+' | base64 > /tmp/still.jpg.base64', function(err, stdout, stderr){
-              if (err !== null) {
-                cb({
-                  stderr: stderr,
-                  message: err.message,
-                  stack: err.stack
-                }, null);
-              } else {
-                cb(null, {
-                  contentType: 'image/jpg (base64)',
-                  content: fs.readFileSync('/tmp/still.jpg.base64').toString()
-                });
-              }
-            });
-          });
+          camera.getStill(cb);
         }
       }
     },
