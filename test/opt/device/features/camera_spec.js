@@ -14,7 +14,4 @@ describe("Feature: camera", function () {
       });
     });
   });
-  describe("get still", function() {
-
-  });
 });

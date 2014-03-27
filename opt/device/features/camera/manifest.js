@@ -9,34 +9,55 @@
 var exec = require('child_process').exec;
 var fs = require('fs');
 
+var PiCamera = require(__dirname+'/models/pi_camera.js');
+
+var camera = new PiCamera();
+
 module.exports = function(device) {
   return {
+    'arm': {
+      fn: function(cb) {
+        if (camera.isArmed()) {
+          cb("Already armed", null);
+        } else {
+          camera.arm(cb);
+        }
+      }
+    },
+    'disarm': {
+      fn: function(cb) {
+        if (! camera.isArmed()) {
+          cb("Not armed", null);
+        } else {
+          camera.disarm(cb);
+        }
+      }
+    },
     'get still (320x240)': {
       fn: function(cb) {
-        exec('/opt/vc/bin/raspistill -w 320 -h 240 -o - | base64 > /tmp/still.jpg.base64', function(err, stdout, stderr){
-          if (err !== null) {
-            cb({
-              stderr: stderr,
-              message: err.message,
-              stack: err.stack
-            }, null);
-          } else {
-            cb(null, {
-              contentType: 'image/jpg (base64)',
-              content: fs.readFileSync('/tmp/still.jpg.base64').toString()
+        if (! camera.isArmed()) {
+          cb("Not armed", null);
+        } else {
+          camera.getStill(function(path) {
+            exec('cat '+path+' | base64 > /tmp/still.jpg.base64', function(err, stdout, stderr){
+              if (err !== null) {
+                cb({
+                  stderr: stderr,
+                  message: err.message,
+                  stack: err.stack
+                }, null);
+              } else {
+                cb(null, {
+                  contentType: 'image/jpg (base64)',
+                  content: fs.readFileSync('/tmp/still.jpg.base64').toString()
+                });
+              }
             });
-          }
-        });
+          });
+        }
       }
     },
     'get rgb triplets (64x48)': {
-      requires: {
-        python: true,
-        pythonModule: {
-          homepage: "http://www.pythonware.com/products/pil/",
-          camera: "http://effbot.org/downloads/Imaging-1.1.7.tar.gz"
-        }
-      },
       fn: function(cb) {
         exec('/opt/vc/bin/raspiyuv -w 64 -h 48 -o /tmp/still.rgb', function(err, stdout, stderr){
           if (err !== null) {
