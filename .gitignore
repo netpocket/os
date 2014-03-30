@@ -3,4 +3,5 @@ init
 dev
 *.log
 .*.swp
+*.swo
 coverage
