@@ -7,6 +7,7 @@
  * */
 
 var exec = require('child_process').exec;
+var spawn = require('child_process').spawn;
 var fs = require('fs');
 
 var PiCamera = require(__dirname+'/models/pi_camera.js');
@@ -16,30 +17,27 @@ var camera = new PiCamera();
 module.exports = function(device) {
   return {
     'arm': {
-      fn: function(cb) {
-        if (camera.isArmed()) {
-          cb("Already armed", null);
-        } else {
-          camera.arm(cb);
-        }
-      }
+      fn: camera.arm.bind(camera)
     },
     'disarm': {
-      fn: function(cb) {
-        if (! camera.isArmed()) {
-          cb("Not armed", null);
-        } else {
-          camera.disarm(cb);
-        }
-      }
+      fn: camera.disarm.bind(camera)
     },
     'get still (320x240)': {
       fn: function(cb) {
-        if (! camera.isArmed()) {
-          cb("Not armed", null);
-        } else {
-          camera.getStill(cb);
-        }
+        camera.getStill(function(err, stream) {
+          var buf = "";
+          var base64 = spawn('base64');
+          stream.pipe(base64.stdin);
+          base64.stdout.on('data', function(data) {
+            buf += data.toString();
+          });
+          base64.on('close', function() {
+            cb(null, {
+              contentType: 'image/jpg (base64)',
+              content: buf
+            });
+          });
+        });
       }
     },
     'get rgb triplets (64x48)': {
