@@ -11,7 +11,7 @@ pi(function() {
     afterEach(function(done) {
       camera.disarm(done);
     });
-    describe.only("getStill()", function() {
+    describe("getStill()", function() {
       it("returns a readable stream (for a jpeg)", function(done) {
         this.timeout(10000);
         camera.getStill(function(err, res) {

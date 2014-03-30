@@ -1,8 +1,5 @@
 require('../../../spec_helper.js');
 var pkg =require('../../../../opt/device/features/camera/manifest.js');
-
-var PiCamera = require('../../../../opt/device/features/camera/models/pi_camera.js');
-
 var fs = require('fs');
 
 describe("Feature: camera", function () {
