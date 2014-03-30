@@ -3,7 +3,7 @@ var fs = require('fs');
 var sources = [
   'server.js',
   'src/**/*.js',
-  'opt/**/*'
+  'opt/**/*.js'
 ];
 
 var js = sources.concat('test/**/*.js');
@@ -35,7 +35,11 @@ module.exports = function(grunt) {
     watch: {
       scripts: {
         files: js,
-        tasks: ['default']
+        tasks: [
+          'jshint',
+          'simplemocha',
+          'cover',
+        ]
       },
       pi: {
         options: { spawn: false },
