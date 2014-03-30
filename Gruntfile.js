@@ -1,9 +1,9 @@
-var piUserHost = "root@192.168.0.107";
+var piUserHost = "root@172.20.10.9";
 var fs = require('fs');
 var sources = [
   'server.js',
   'src/**/*.js',
-  'opt/**/*'
+  'opt/**/*.js'
 ];
 
 var js = sources.concat('test/**/*.js');
@@ -35,7 +35,11 @@ module.exports = function(grunt) {
     watch: {
       scripts: {
         files: js,
-        tasks: ['default']
+        tasks: [
+          'jshint',
+          'simplemocha',
+          'cover',
+        ]
       },
       pi: {
         options: { spawn: false },
@@ -71,7 +75,7 @@ module.exports = function(grunt) {
           ]
         }, function(err) {
           if (err !== null) {
-            grunt.log.writeln("Transferred "+remotePath);
+            grunt.log.writeln("Attempted to transfer "+remotePath);
           }
         });
       }
