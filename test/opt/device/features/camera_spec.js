@@ -16,17 +16,22 @@ describe("Feature: camera", function () {
       });
     });
 
-    describe("PiCamera", function() {
+    describe("Model: PiCamera", function() {
       var camera = null;
-      beforeEach(function() {
+      beforeEach(function(done) {
         camera = new PiCamera();
+        camera.arm(done);
       });
-      describe("getStill", function() {
-        it("outputs image data", function(done) {
-          camera.arm(function() {
-            camera.getStill(function(err, res) {
-              expect(err).to.eq(null);
-              expect(res.content.length > 0).to.be.true;
+      afterEach(function(done) {
+        camera.disarm(done);
+      });
+      describe.only("getStill()", function() {
+        it("returns a readable stream (for a jpeg)", function(done) {
+          this.timeout(10000);
+          camera.getStill(function(err, res) {
+            expect(err).to.eq(null);
+            res.on('readable', function() {
+              expect(res.read(1).length).to.eq(1);
               done();
             });
           });
