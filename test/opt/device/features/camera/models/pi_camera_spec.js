@@ -17,6 +17,7 @@ pi(function() {
         camera.getStill(function(err, res) {
           expect(err).to.eq(null);
           res.on('readable', function() {
+            res.removeAllListeners();
             expect(res.read(1).length).to.eq(1);
             done();
           });
