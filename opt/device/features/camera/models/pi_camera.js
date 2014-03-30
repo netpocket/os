@@ -5,25 +5,19 @@ exec = cp.exec,
 spawn = cp.spawn,
 PiCamera = Backbone.Model.extend({
   defaults: {
-    armed: false
-  },
-
-  initialize: function() {
-    this.child = null;
-    return false;
+    armed: false,
+    tempFilePath: '/tmp/_still.jpg'
   },
 
   isArmed: function() {
     return this.get('armed');
   },
 
-  tempFilePath: '/tmp/_still.jpg',
-
   /* Arming the PiCamera means to run raspistill with
    * the -s argument which leaves the camera on and ready
    * to take stills on SIGUSR1 */
   arm: function(cb) {
-    if (this.child !== null) {
+    if (this.isArmed()) {
       return cb("Already armed.", null);
     }
     this.child = spawn('/opt/vc/bin/raspistill', [
@@ -32,7 +26,7 @@ PiCamera = Backbone.Model.extend({
       '-t', '0', // Never timeout
       '-w', '320',
       '-h', '240',
-      '-o', this.tempFilePath
+      '-o', this.get('tempFilePath')
     ]);
 
     // Listen to output
@@ -81,7 +75,7 @@ PiCamera = Backbone.Model.extend({
 
     this.once('capture:finished', function(id) {
       clearTimeout(timeout);
-      cb(null, fs.createReadStream(this.tempFilePath));
+      cb(null, fs.createReadStream(this.get('tempFilePath')));
     }.bind(this));
 
     // Take a picture
@@ -93,7 +87,6 @@ PiCamera = Backbone.Model.extend({
   disarm: function(cb) {
     this.child.removeAllListeners();
     this.child.kill("SIGINT");
-    this.child = null;
     this.set('armed', false);
     cb(null, "PiCamera is disarmed.");
   }
