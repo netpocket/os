@@ -1,4 +1,4 @@
-var piUserHost = "root@192.168.0.107";
+var piUserHost = "root@172.20.10.9";
 var fs = require('fs');
 var sources = [
   'server.js',
@@ -71,7 +71,7 @@ module.exports = function(grunt) {
           ]
         }, function(err) {
           if (err !== null) {
-            grunt.log.writeln("Transferred "+remotePath);
+            grunt.log.writeln("Attempted to transfer "+remotePath);
           }
         });
       }
