@@ -25,18 +25,22 @@ module.exports = function(device) {
     'get still (320x240)': {
       fn: function(cb) {
         camera.getStill(function(err, stream) {
-          var buf = "";
-          var base64 = spawn('base64');
-          stream.pipe(base64.stdin);
-          base64.stdout.on('data', function(data) {
-            buf += data.toString();
-          });
-          base64.on('close', function() {
-            cb(null, {
-              contentType: 'image/jpg (base64)',
-              content: buf
+          if (err !== null) {
+            cb(err);
+          } else {
+            var buf = "";
+            var base64 = spawn('base64');
+            stream.pipe(base64.stdin);
+            base64.stdout.on('data', function(data) {
+              buf += data.toString();
             });
-          });
+            base64.on('close', function() {
+              cb(null, {
+                contentType: 'image/jpg (base64)',
+                content: buf
+              });
+            });
+          }
         });
       }
     },
