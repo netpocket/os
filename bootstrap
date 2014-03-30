@@ -54,7 +54,7 @@ cd $NOS
 
 # vendor/raspbian_hardfloat/node_modules is pre-built
 # to deploy elsewhere you must do equivalent of
-# apt-get update && apt-get install -y python build-essential
+# apt-get update && apt-get install -y python python-setuptools build-essential
 # npm rebuild (or npm install from scratch)
 
 ln -s $VENDOR/node_modules $NOS/node_modules
