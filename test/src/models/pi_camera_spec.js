@@ -1,5 +1,5 @@
-require('../../../../../spec_helper.js');
-var PiCamera = require('../../../../../../opt/device/features/camera/models/pi_camera.js');
+require('../../spec_helper.js');
+var PiCamera = require('../../../src/models/pi_camera.js');
 
 pi(function() {
   describe("PiCamera", function() {

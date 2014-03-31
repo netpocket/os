@@ -26,6 +26,7 @@ PiCamera = Backbone.Model.extend({
       '-v', // Be verbose so we know when to fire events
       '-k', // Listen for enter key
       '-t', '0', // Never timeout
+      '-n', // We don't need a preview
       '-w', this.get('width'),
       '-h', this.get('height'),
       '-o', this.get('tempFilePath')
