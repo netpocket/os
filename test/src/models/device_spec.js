@@ -49,31 +49,41 @@ describe("Device", function() {
     });
   });
 
-  describe("loadAttributes()", function() {
-    it("loads attributes from disk synchronously", function(done) {
-      device.configFile = __dirname+'/../../fixtures/device.json';
-      fs.writeFile(device.configFile, JSON.stringify({name:'The Name'}), function() {
-        device.set('name', 'foo');
-        device.loadAttributes();
-        expect(device.get('name')).to.eq('The Name');
-        done();
+  describe("config", function() {
+    describe("default path", function() {
+      it("is in etc/device.json", function() {
+        expect(device.configFile).to.match(/etc\/device.json/)
       });
     });
-  });
 
-  describe("persistAttributes()", function() {
-    it("writes attributes to disk asynchronously", function(done) {
-      device.configFile = __dirname+'/../../fixtures/device_tmp.json';
-      fs.writeFile(device.configFile, JSON.stringify({name:''}), function() {
-        device.set('name', 'persist test');
-        device.persistAttributes(function() {
-          expect(require(device.configFile).name).to.eq('persist test');
+    describe("loadAttributes()", function() {
+      it("loads attributes from disk synchronously", function(done) {
+        device.configFile = __dirname+'/../../fixtures/device.json';
+        fs.writeFile(device.configFile, JSON.stringify({name:'The Name'}), function() {
+          device.set('name', 'foo');
+          device.loadAttributes();
+          expect(device.get('name')).to.eq('The Name');
           done();
         });
       });
     });
-    afterEach(function() {
-      fs.unlink(device.configFile);
+
+    describe("persistAttributes()", function() {
+      it("writes attributes to disk asynchronously", function(done) {
+        device.configFile = __dirname+'/../../fixtures/device_tmp.json';
+        fs.writeFile(device.configFile, JSON.stringify({name:''}), function() {
+          device.set('name', 'persist test');
+          device.persistAttributes(function() {
+            expect(require(device.configFile).name).to.eq('persist test');
+            done();
+          });
+        });
+      });
+      afterEach(function() {
+        fs.unlink(device.configFile);
+      });
     });
+
   });
+
 });
