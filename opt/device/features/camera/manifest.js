@@ -10,21 +10,17 @@ var exec = require('child_process').exec;
 var spawn = require('child_process').spawn;
 var fs = require('fs');
 
-var PiCamera = require(__dirname+'/models/pi_camera.js');
-
-var camera = new PiCamera();
-
 module.exports = function(device) {
   return {
     'arm': {
-      fn: camera.arm.bind(camera)
+      fn: device.camera.arm.bind(device.camera)
     },
     'disarm': {
-      fn: camera.disarm.bind(camera)
+      fn: device.camera.disarm.bind(device.camera)
     },
     'get still (320x240)': {
       fn: function(cb) {
-        camera.getStill(function(err, stream) {
+        device.camera.getStill(function(err, stream) {
           if (err !== null) {
             cb(err);
           } else {

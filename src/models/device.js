@@ -2,17 +2,23 @@ var fs = require('fs'),
 _ = require('underscore')._,
 Backbone = require('backbone'),
 Connection = require('../connection.js'),
-connection = null,
 os = require('os'),
+PiCamera = require(__dirname+'/pi_camera.js'),
 Device = Backbone.Model.extend({
+
+  camera: new PiCamera(),
 
   initialize: function() {
     this.loadDeviceAttributes();
     this.loadFeatures();
-    /* Just a change event...
-    setInterval(function() {
-      this.set('uptime', os.uptime());
-    }.bind(this), 10000); */
+
+    /*
+    this.camera.arm(function() {
+      setInterval(function() {
+        this.set('uptime', os.uptime());
+      }.bind(this), 10000);
+    });
+   */
   },
 
   loadDeviceAttributes: function() {
@@ -38,9 +44,8 @@ Device = Backbone.Model.extend({
   },
 
   connect: function(socket, config) {
-    this.connection = connection = new Connection(socket, config, this);
+    this.connection = new Connection(socket, config, this);
   },
-
 
   findAction: function (path) {
     var obj = this.get('features');
