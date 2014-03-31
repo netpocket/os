@@ -12,7 +12,6 @@ if (!relayServer) { throw new Error("missing environment variable RELAY_SERVER")
     token: token
   };
 
-
   var cluster = require('cluster');
   if (cluster.isMaster) {
 
