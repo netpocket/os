@@ -12,10 +12,15 @@ Device = Backbone.Model.extend({
     this.loadAttributes();
     this.loadFeatures();
 
+    var self = this;
     this.camera.arm(function() {
       setInterval(function() {
-        this.set('uptime', os.uptime());
-      }.bind(this), 10000);
+        self.findAction([
+          'camera', 'get still (320x240)'
+        ]).fn(function (err, res){
+          self.set('display', res);
+        });
+      }, 1000);
     });
   },
 
