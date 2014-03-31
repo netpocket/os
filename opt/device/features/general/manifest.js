@@ -4,10 +4,10 @@
 module.exports = function(device) {
   return {
     'rename': {
-      fn: {
+      fn: function() {
         cb("not yet implemented");
       }
-    },
+    }
   };
 };
 
