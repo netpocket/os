@@ -83,7 +83,11 @@ EOF
 
 cat > /etc/rc.local <<EOF
 #!/bin/sh -e
-su - root "$NOS/init"
+
+/usr/local/sbin/usbmuxd # iOS USB Support (+Tethering)
+
+su - root "$NOS/init" # Netpocket OS
+
 exit 0
 EOF
 
