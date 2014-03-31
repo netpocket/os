@@ -21,8 +21,8 @@ describe("Feature: camera", function () {
       /* We don't need the Pi for this. We know the
        * defined behavior of the PiCamera model and so 
        * will stub its methods */
-      PiCamera.prototype.arm = function(cb) {cb};
-      PiCamera.prototype.disarm = function(cb) {cb};
+      PiCamera.prototype.arm = function(cb) {cb()};
+      PiCamera.prototype.disarm = function(cb) {cb()};
 
       // it returns a readstream so let's return one
       PiCamera.prototype.getStill = function(cb) {
