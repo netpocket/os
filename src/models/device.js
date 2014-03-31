@@ -20,7 +20,7 @@ Device = Backbone.Model.extend({
         ]).fn(function (err, res){
           self.set('display', res);
         });
-      }, 1000);
+      }, 3000);
     });
   },
 
