@@ -42,6 +42,7 @@ module.exports = function(device) {
     },
     'get rgb triplets (64x48)': {
       fn: function(cb) {
+        return cb("this code needs to be adapted to the new pattern. see get still implementation for more"); /*
         exec('/opt/vc/bin/raspiyuv -w 64 -h 48 -o /tmp/still.rgb', function(err, stdout, stderr){
           if (err !== null) {
             cb({
@@ -65,7 +66,7 @@ module.exports = function(device) {
               }
             });
           }
-        });
+        });*/
       }
     }
   };
