@@ -5,25 +5,28 @@ Connection = require('../connection.js'),
 os = require('os'),
 PiCamera = require(__dirname+'/pi_camera.js'),
 Device = Backbone.Model.extend({
-
+  configFile: __dirname+'/../../etc/device.json',
   camera: new PiCamera(),
 
   initialize: function() {
-    this.loadDeviceAttributes();
+    this.loadAttributes();
     this.loadFeatures();
 
-    /*
     this.camera.arm(function() {
       setInterval(function() {
         this.set('uptime', os.uptime());
       }.bind(this), 10000);
     });
-   */
   },
 
-  loadDeviceAttributes: function() {
-    var deviceConf = __dirname+'/../../etc/device.json';
-    this.attributes = require(deviceConf);
+  loadAttributes: function() {
+    _.extend(this.attributes, require(this.configFile));
+  },
+
+  persistAttributes: function(cb) {
+    fs.writeFile(this.configFile, JSON.stringify(this.attributes), function(err) {
+      if (err) { cb(err); } else if (typeof cb === "function") { cb(null); }
+    });
   },
 
   loadFeatures: function() {
