@@ -2,7 +2,7 @@ require('../../../spec_helper.js');
 var pkg =require('../../../../opt/device/features/camera/manifest.js');
 var fs = require('fs');
 
-var PiCamera =require('../../../../opt/device/features/camera/models/pi_camera.js');
+var PiCamera =require('../../../../src/models/pi_camera.js');
 
 describe("Feature: camera", function () {
   pi(function() {
@@ -31,7 +31,7 @@ describe("Feature: camera", function () {
     });
 
     it("returns jpeg as base64", function(done) {
-      pkg()['get still (320x240)'].fn(function(err, res) {
+      pkg({camera:new PiCamera()})['get still (320x240)'].fn(function(err, res) {
         expect(err).to.be.null;
         expect(res.contentType).to.eq('image/jpg (base64)');
         expect(res.content.length > 0).to.be.true;
