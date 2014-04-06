@@ -7,7 +7,7 @@ Features I want to see next:
       e.g. must have a name
     - this is how you will configure wifi for now
   - allow user view source, add, and edit features/tasks
-* faster still capture
-  - keep camera process open, send Enter on 'get still'
 * video streaming
+  - http://binaryjs.com/ binary data encoder/decoder for websockets?
+  - https://github.com/mbebenita/Broadway h264 decoder
 * audio streaming
