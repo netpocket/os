@@ -13,13 +13,14 @@
   "author": "Keyvan Fatehi",
   "license": "BSD-2-Clause",
   "dependencies": {
+    "backbone": "~1.1.2",
+    "binaryjs": "^0.2.1",
+    "forever": "~0.10.11",
+    "iwlist": "0.0.5",
     "primus": "~2.0.2",
     "sockjs": "~0.3.8",
     "sockjs-client-node": "0.0.0",
-    "underscore": "~1.6.0",
-    "backbone": "~1.1.2",
-    "forever": "~0.10.11",
-    "iwlist": "0.0.5"
+    "underscore": "~1.6.0"
   },
   "devDependencies": {
     "grunt-simple-mocha": "~0.4.0",
