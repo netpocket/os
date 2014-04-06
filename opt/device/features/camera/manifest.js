@@ -40,6 +40,18 @@ module.exports = function(device) {
         });
       }
     },
+    'video stream': {
+      fn: function(cb) {
+        // lol 
+        device.camera.streamVideo(function(err, stream) {
+          if (err !== null) {
+            cb(err);
+          } else {
+            // stream here is a readable stream
+          }
+        });
+      }
+    },
     'get rgb triplets (64x48)': {
       fn: function(cb) {
         return cb("this code needs to be adapted to the new pattern. see get still implementation for more"); /*
