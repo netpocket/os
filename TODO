@@ -9,5 +9,6 @@ Features I want to see next:
   - allow user view source, add, and edit features/tasks
 * video streaming
   - http://binaryjs.com/ binary data encoder/decoder for websockets?
+    - https://github.com/binaryjs/binaryjs/blob/master/doc/api.md
   - https://github.com/mbebenita/Broadway h264 decoder
 * audio streaming
