@@ -12,6 +12,7 @@ Device = Backbone.Model.extend({
     this.loadAttributes();
     this.loadFeatures();
 
+    /* Load loops / programs / modules ??? 
     var self = this;
     this.camera.arm(function() {
       setInterval(function() {
@@ -22,6 +23,7 @@ Device = Backbone.Model.extend({
         });
       }, 3000);
     });
+    */
   },
 
   loadAttributes: function() {
