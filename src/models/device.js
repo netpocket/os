@@ -12,6 +12,14 @@ Device = Backbone.Model.extend({
     this.loadAttributes();
     this.loadFeatures();
 
+    // i just disabled this code here
+    // that is what was taking camera snapshots etc
+    //
+    // i want the user to be able to give his things a role
+    // or a purpose in this way....
+    // also the features thing will probably go the fuck away, it is 
+    // mostly useless in terms of what IoT will be / is for
+    //
     /* Load loops / programs / modules ??? 
     var self = this;
     this.camera.arm(function() {
