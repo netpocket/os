@@ -12,6 +12,8 @@ Device = Backbone.Model.extend({
   initialize: function() {
     this.loadAttributes();
     this.loadFeatures();
+
+    // We recycle our binary sockets via this collection
     this.binarySockets = new BinarySockets();
 
     // i just disabled this code here

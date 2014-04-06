@@ -15,9 +15,8 @@ module.exports = function(device) {
     'arm (for stills)': {
       fn: function(cb) {
         device.connection.createBinarySocket('binary socket for stills', function(err, socket) {
-          console.log(socket);
           device.camera.binarySocket = socket;
-          //device.camera.arm.bind(device.camera);
+          device.camera.arm.bind(device.camera);
           cb(err, {
             status: "armed",
             socket: socket.attributes
@@ -34,18 +33,8 @@ module.exports = function(device) {
           if (err !== null) {
             cb(err);
           } else {
-            var buf = "";
-            var base64 = spawn('base64');
-            stream.pipe(base64.stdin);
-            base64.stdout.on('data', function(data) {
-              buf += data.toString();
-            });
-            base64.on('close', function() {
-              cb(null, {
-                contentType: 'image/jpg (base64)',
-                content: buf
-              });
-            });
+            stream.pipe(device.camera.binarySocket)
+            cb(null, "Piping image to relay");
           }
         });
       }
