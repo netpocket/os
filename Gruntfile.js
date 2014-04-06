@@ -1,5 +1,5 @@
-//var piUserHost = "root@172.20.10.9";
-var piUserHost = "root@192.168.0.107";
+var piUserHost = "root@172.20.10.9";
+// var piUserHost = "root@192.168.0.107";
 var fs = require('fs');
 var sources = [
   'server.js',
