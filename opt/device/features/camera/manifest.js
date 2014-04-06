@@ -12,10 +12,10 @@ var fs = require('fs');
 
 module.exports = function(device) {
   return {
-    'arm': {
+    'arm (for stills)': {
       fn: device.camera.arm.bind(device.camera)
     },
-    'disarm': {
+    'disarm (for stills)': {
       fn: device.camera.disarm.bind(device.camera)
     },
     'get still (320x240)': {
@@ -40,9 +40,14 @@ module.exports = function(device) {
         });
       }
     },
+    'arm (for video)': {
+      fn: device.camera.arm.bind(device.camera)
+    },
+    'disarm (for video)': {
+      fn: device.camera.disarm.bind(device.camera)
+    },
     'video stream': {
       fn: function(cb) {
-        // lol 
         device.camera.streamVideo(function(err, stream) {
           if (err !== null) {
             cb(err);
