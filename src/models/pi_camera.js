@@ -66,6 +66,9 @@ PiCamera = Backbone.Model.extend({
     }
   },
 
+  // Look it's tough to dev on the Pi directly,
+  // since this returns a readStream, let's shunt it to
+  // return an equivalent readStream here on disk...
   getStill: function(cb) {
     if (! this.isArmed()) {
       return cb("Not armed.", null);
