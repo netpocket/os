@@ -30,6 +30,25 @@ var Connection = (function(socket, config, device) {
   device.on('change', function() {
     emit('device:'+config.token+':changed', device.changed);
   });
+
+  // Binary Socket
+  this.createBinarySocket = function(name, cb) {
+    var binSock = device.binarySockets.findWhere({ name:name });
+    if (binSock) {
+      console.log("recycled existing binary socket");
+      cb(null, binSock);
+    } else {
+      socket.once('binary server ready', function(data) {
+        binSock = device.binarySockets.add(_.extend({
+          server:config.relayServer.replace('http://', 'ws://')
+        }, data));
+        cb(null, binSock);
+      })
+      emit('give me a binary server', {
+        name: name
+      });
+    }
+  }
 });
 
 module.exports = Connection;

@@ -13,7 +13,17 @@ var fs = require('fs');
 module.exports = function(device) {
   return {
     'arm (for stills)': {
-      fn: device.camera.arm.bind(device.camera)
+      fn: function(cb) {
+        device.connection.createBinarySocket('binary socket for stills', function(err, socket) {
+          console.log(socket);
+          device.camera.binarySocket = socket;
+          //device.camera.arm.bind(device.camera);
+          cb(err, {
+            status: "armed",
+            socket: socket.attributes
+          });
+        });
+      }
     },
     'disarm (for stills)': {
       fn: device.camera.disarm.bind(device.camera)

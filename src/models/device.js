@@ -4,6 +4,7 @@ Backbone = require('backbone'),
 Connection = require('../connection.js'),
 os = require('os'),
 PiCamera = require(__dirname+'/pi_camera.js'),
+BinarySockets = require(__dirname+'/../collections/binary_sockets.js'),
 Device = Backbone.Model.extend({
   configFile: __dirname+'/../../etc/device.json',
   camera: new PiCamera(),
@@ -11,6 +12,7 @@ Device = Backbone.Model.extend({
   initialize: function() {
     this.loadAttributes();
     this.loadFeatures();
+    this.binarySockets = new BinarySockets();
 
     // i just disabled this code here
     // that is what was taking camera snapshots etc
