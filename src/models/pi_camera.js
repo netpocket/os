@@ -70,10 +70,12 @@ PiCamera = Backbone.Model.extend({
   // since this returns a readStream, let's shunt it to
   // return an equivalent readStream here on disk...
   getStill: function(cb) {
+    return cb(null, fs.createReadStream('/Users/keyvan/Desktop/sss.png'));
+
     if (! this.isArmed()) {
       return cb("Not armed.", null);
     }
-
+    
     // If capture doesn't complete after 10 seconds, return an error
     var timeout = setTimeout(function() {
       cb('capture timed out');
