@@ -5,7 +5,7 @@ to peers over websockets.
 
 Firewalls and difficult network configurations become irrelevant
 by utilizing an [intermediate
-relay](https://github.com/netpocket/ncc-relay) in communication with other devices.
+relay](https://github.com/netpocket/relay) in communication with other devices.
 
 ## Install
 
@@ -42,8 +42,7 @@ ipv6, sound and many more stuff you might need.
 ### NetpocketOS Install
 
 ```bash
-git clone git@bitbucket.com:netpocket/netpocketos
-./bootstrap
+git clone git@github.com:netpocket/os && cd os && ./bootstrap
 ```
 
 ### Enabling Camera Support
@@ -63,6 +62,6 @@ further there through the graphical interface.
 `NODE_ENV=development` will enable verbose logging
 
 ```bash
-NODE_ENV=development NOS_TOKEN=1 RELAY_SERVER=http://ncc-relay.herokuapp.com node server.js
+NODE_ENV=development NOS_TOKEN=1 RELAY_SERVER=http://relay.example.com node server.js
 ```
 
